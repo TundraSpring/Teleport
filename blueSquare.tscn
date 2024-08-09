@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://crjalacootfya"]
+
+[ext_resource type="Texture2D" uid="uid://neprqety4r3t" path="res://art/blueSquare.png" id="1_vpr2o"]
+
+[node name="Sprite2D" type="Sprite2D"]
+texture = ExtResource("1_vpr2o")

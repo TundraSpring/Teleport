@@ -1,0 +1,99 @@
+[gd_scene load_steps=12 format=3 uid="uid://boefdk0hhylqw"]
+
+[ext_resource type="Texture2D" uid="uid://ce4nb0ern7sqk" path="res://art/NightflowerActive.png" id="1_btprv"]
+[ext_resource type="Script" path="res://Dygnflower.cs" id="1_ojt8a"]
+[ext_resource type="Texture2D" uid="uid://ba8b2m0wyim15" path="res://art/DayFlowerActive.png" id="2_j1ljp"]
+[ext_resource type="Texture2D" uid="uid://c3ntdxvcxb81d" path="res://art/NightflowerWhite.png" id="2_wra86"]
+[ext_resource type="Texture2D" uid="uid://bi05i0bwx2apc" path="res://art/DayflowerPending.png" id="4_7ylue"]
+[ext_resource type="Texture2D" uid="uid://kublwgqfo3x5" path="res://art/DayflowerWhite.png" id="4_w2dsg"]
+[ext_resource type="Texture2D" uid="uid://ug3adlf2x5us" path="res://art/NightflowerPending.png" id="5_0bq2i"]
+[ext_resource type="Texture2D" uid="uid://dg21q1n42eish" path="res://art/DayFlowerReady.png" id="6_dhcc8"]
+[ext_resource type="Texture2D" uid="uid://bsv76e4p0fen3" path="res://art/NightFlowerReady.png" id="7_hbchx"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wxnlb"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_j1ljp")
+}],
+"loop": true,
+"name": &"ActiveDay",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_btprv")
+}],
+"loop": true,
+"name": &"ActiveNight",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_7ylue")
+}],
+"loop": true,
+"name": &"PendingDay",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_0bq2i")
+}],
+"loop": true,
+"name": &"PendingNight",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_dhcc8")
+}],
+"loop": true,
+"name": &"ReadyDay",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_hbchx")
+}],
+"loop": true,
+"name": &"ReadyNight",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_w2dsg")
+}],
+"loop": true,
+"name": &"SleepingDay",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_wra86")
+}],
+"loop": true,
+"name": &"SleepingNight",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_rioqn"]
+radius = 39.0
+
+[node name="Dygnflower" type="Area2D"]
+scale = Vector2(3, 3)
+collision_layer = 0
+collision_mask = 48
+script = ExtResource("1_ojt8a")
+
+[node name="DygnflowerAnimation" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -18.5)
+sprite_frames = SubResource("SpriteFrames_wxnlb")
+animation = &"ReadyNight"
+
+[node name="DygnflowerCollision" type="CollisionShape2D" parent="."]
+position = Vector2(0, -25.3333)
+shape = SubResource("CircleShape2D_rioqn")
+
+[connection signal="body_entered" from="." to="." method="OnBodyEntered"]
+[connection signal="body_exited" from="." to="." method="OnBodyExited"]
