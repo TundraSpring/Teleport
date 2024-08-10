@@ -16,7 +16,7 @@ public partial class Dygnflower : Area2D
     [Signal]
     public delegate void SetTeleportEventHandler();
 
-    public void SetData(string id, int channel, DygnflowerStatus status, DygnflowerType? type, Vector2 teleportDestination)
+    public void SetData(string id, int channel, DygnflowerStatus status, DygnflowerType? type, Vector2 teleportDestination, bool changeSprite)
 	{
 		this.id = id;
         this.channel = channel;
@@ -24,11 +24,19 @@ public partial class Dygnflower : Area2D
         {
             this.type = (DygnflowerType)type;
         }
-        SetStatus(status);
+        if (changeSprite)
+        {
+            SetStatus(status);
+        }
+        else
+        {
+            this.status = status;
+        }
         this.teleportDestination = teleportDestination;
     }
 
-	public void SetStatus(DygnflowerStatus newStatus)
+
+    public void SetStatus(DygnflowerStatus newStatus)
 	{
         status = newStatus;
         AnimatedSprite2D sprite = GetNode<AnimatedSprite2D>("DygnflowerAnimation");

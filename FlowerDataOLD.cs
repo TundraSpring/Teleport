@@ -16,8 +16,8 @@ namespace Teleport
             Dygnflower dygnflower1 = new Dygnflower();
             Dygnflower dygnflower2 = new Dygnflower();
 
-            dygnflower1.SetData("A01-R01-F01", 1, DygnflowerStatus.Sleeping, DygnflowerType.Night, new Vector2());
-            dygnflower2.SetData("A01-R01-F02", 1, DygnflowerStatus.Sleeping, DygnflowerType.Night, new Vector2());
+            dygnflower1.SetData("A01-R01-F01", 1, DygnflowerStatus.Sleeping, DygnflowerType.Night, new Vector2(), false);
+            dygnflower2.SetData("A01-R01-F02", 1, DygnflowerStatus.Sleeping, DygnflowerType.Night, new Vector2(), false);
 
             Dygnflower[] dygnflowers1 = new Dygnflower[] { dygnflower1, dygnflower2 };
 
