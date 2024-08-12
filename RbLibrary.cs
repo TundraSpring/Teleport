@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Godot;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,11 +23,8 @@ namespace Teleport
         public override void _Ready()
         {
             RoomBridge roomBridge = new RoomBridge();
-
-            roomBridge.SetData("A01-R01-RB01", 1, "res://area_2.tscn", 1);
-
+            roomBridge.SetData("res://area_2.tscn", "A01-R01-RB01", 1, 0, 0, new Vector4(0, 0, 0, 0), new Vector2(0, 0));
             List<RoomBridge> roomBridges = new List<RoomBridge> { roomBridge };
-
             library.Add(1, roomBridges);
         }
     }

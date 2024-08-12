@@ -160,19 +160,19 @@ scale = Vector2(25, 5)
 position = Vector2(-3759, -867)
 scale = Vector2(25, 5)
 
-[node name="Nightflower1" parent="." groups=["Flowers"] instance=ExtResource("5_yqovj")]
+[node name="Dygnflower0" parent="." groups=["Flowers"] instance=ExtResource("5_yqovj")]
 position = Vector2(-1182, -23)
 
-[node name="Nightflower2" parent="." groups=["Flowers"] instance=ExtResource("5_yqovj")]
+[node name="Dygnflower1" parent="." groups=["Flowers"] instance=ExtResource("5_yqovj")]
 position = Vector2(-9454, 62)
 
-[node name="RoomBridge1" parent="." instance=ExtResource("6_exg1d")]
+[node name="RoomBridge0" parent="." instance=ExtResource("6_exg1d")]
 position = Vector2(1069, -11)
 scale = Vector2(1.5, 1.5)
 
 [connection signal="Interact" from="Player" to="." method="OnPlayerInteract"]
-[connection signal="Hit" from="Nightflower1" to="." method="OnNightFlowerHit"]
-[connection signal="SetTeleport" from="Nightflower1" to="." method="OnNightflowerTeleportChange"]
-[connection signal="Hit" from="Nightflower2" to="." method="OnNightFlowerHit"]
-[connection signal="SetTeleport" from="Nightflower2" to="." method="OnNightflowerTeleportChange"]
-[connection signal="Entered" from="RoomBridge1" to="." method="OnRoomBridgeEntered"]
+[connection signal="Hit" from="Dygnflower0" to="." method="OnNightFlowerHit"]
+[connection signal="SetTeleport" from="Dygnflower0" to="." method="OnNightflowerTeleportChange"]
+[connection signal="Hit" from="Dygnflower1" to="." method="OnNightFlowerHit"]
+[connection signal="SetTeleport" from="Dygnflower1" to="." method="OnNightflowerTeleportChange"]
+[connection signal="Entered" from="RoomBridge0" to="." method="OnRoomBridgeEntered"]

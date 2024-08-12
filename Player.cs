@@ -36,7 +36,6 @@ public partial class Player : Node2D
 
     public override void _Ready()
 	{
-        
         SetPlayerMode(PlayerMode.Body);
         SetSize(1F);
         body = GetNode<CharacterBody2D>("PlayerBody");
@@ -54,6 +53,11 @@ public partial class Player : Node2D
 
     public override void _Process(double delta)
 	{
+
+    }
+
+    public void SetData(float size, double energy, double health, PlayerMode playerMode, bool canGlide)
+    {
 
     }
 
