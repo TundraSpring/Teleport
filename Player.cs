@@ -502,7 +502,6 @@ public partial class Player : Node2D
         bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F * size);
         if (body.IsOnFloor() && body.IsOnCeiling())
         {
-
             bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 0.68F * size);
             tryingToUncrouch = true;
             GD.Print("B");
@@ -517,6 +516,30 @@ public partial class Player : Node2D
             tryingToUncrouch = false;
             GD.Print("A");
         }
+
+            //Crouched
+            //bodyCollision.Position = 0, 0
+            //bodyCollision.Scale = 0, (0.68F * size)
+
+            //Half uncrouched?
+            //bodyCollision.Position = 0, (7.5F * size)
+            //bodyCollision.Scale = 0, (0.84F * size)
+
+            //Uncrouched
+            //bodyCollision.Position = 0, (15F * size)
+            //bodyCollision.Scale = 0, (1F * size)
+
+
+            //bodyCollision.Position = 0, ((15F * unCrouchPercent) * size)
+            //bodyCollision.Scale = 0, ((1F * (0.68 + 0.32 * unCrouchPercent )) * size)
+
+            //0. (You are crouched)
+            //1. MoveAndCollide bodycollision from (0, 0) to (0, -32)
+            //2. unCrouchPercent = bodyCollision.Position.Y / 32
+            //   (If it goes halfway, then it will be 16 / 32 = 0.5)
+            //3. bodyCollision.Position = new Vector(0, ((15F * unCrouchPercent) * size)
+            //   bodyCollision.Scale = 0, ((1F * (0.68 + 0.32 * unCrouchPercent)) * size)
+
     }
 
 

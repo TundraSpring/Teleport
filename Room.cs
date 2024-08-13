@@ -72,7 +72,7 @@ namespace Teleport
             //GD.Print(playerNodeObj.Position);
         }
 
-        public void OnNightFlowerHit()
+        public void OnDygnflowerHit()
         {
             int nonSleepingCount = 0;
             for (int i = 0; i < flowerObjects.Count; i++)
@@ -95,7 +95,7 @@ namespace Teleport
             FlowerLibrary.Instance.UpdateLibrary(1, flowerObjects);
         }
 
-        public void OnNightflowerTeleportChange(Vector2 newTeleportDestination)
+        public void OnDygnflowerTeleportChange(Vector2 newTeleportDestination)
         {
             if (newTeleportDestination != new Vector2(-9999999, -9999999))
             {
@@ -113,7 +113,18 @@ namespace Teleport
         public void OnPlayerInteract()
         {
 
-            for (int i = 0; i < currentTeleportDestinations.Count; i++)
+            //for (int i = 0; i < currentTeleportDestinations.Count; i++)
+            //{
+            //    if (currentTeleportDestinations[i] is not null && flowersInProximity > 0)
+            //    {
+            //        Vector2 destination = currentTeleportDestinations[i].Value;
+            //        currentTeleportDestinations.Clear();
+            //        playerNodeObj.Teleport(destination);
+            //        break;
+            //    }
+            //}
+
+            for (int i = currentTeleportDestinations.Count - 1; i >= 0; i--)
             {
                 if (currentTeleportDestinations[i] is not null && flowersInProximity > 0)
                 {

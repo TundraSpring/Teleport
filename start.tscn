@@ -171,8 +171,8 @@ position = Vector2(1069, -11)
 scale = Vector2(1.5, 1.5)
 
 [connection signal="Interact" from="Player" to="." method="OnPlayerInteract"]
-[connection signal="Hit" from="Dygnflower0" to="." method="OnNightFlowerHit"]
-[connection signal="SetTeleport" from="Dygnflower0" to="." method="OnNightflowerTeleportChange"]
-[connection signal="Hit" from="Dygnflower1" to="." method="OnNightFlowerHit"]
-[connection signal="SetTeleport" from="Dygnflower1" to="." method="OnNightflowerTeleportChange"]
+[connection signal="Hit" from="Dygnflower0" to="." method="OnDygnflowerHit"]
+[connection signal="SetTeleport" from="Dygnflower0" to="." method="OnDygnflowerTeleportChange"]
+[connection signal="Hit" from="Dygnflower1" to="." method="OnDygnflowerHit"]
+[connection signal="SetTeleport" from="Dygnflower1" to="." method="OnDygnflowerTeleportChange"]
 [connection signal="Entered" from="RoomBridge0" to="." method="OnRoomBridgeEntered"]

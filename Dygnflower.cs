@@ -100,18 +100,15 @@ public partial class Dygnflower : Area2D
 
     public void OnBodyEntered(Node2D node2D)
     {
-        if (node2D.Name == "PlayerSoul")
-        {
             if (status == DygnflowerStatus.Sleeping)
             {
                 SetStatus(DygnflowerStatus.Pending);
                 EmitSignal(SignalName.Hit);
             }
-            if (status == DygnflowerStatus.Active || status == DygnflowerStatus.Ready)
+            if ((status == DygnflowerStatus.Active || status == DygnflowerStatus.Ready) && node2D.Name == "PlayerSoul")
             {
                 SetStatus(DygnflowerStatus.Ready);
                 EmitSignal(SignalName.SetTeleport, teleportDestination);
             }
-        }
     }
 }
