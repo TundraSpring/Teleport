@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://c0jj1bwa6ykwc"]
+[gd_scene load_steps=26 format=3 uid="uid://c0jj1bwa6ykwc"]
 
 [ext_resource type="Script" path="res://Player.cs" id="1_x1iux"]
 [ext_resource type="Texture2D" uid="uid://6ph6sfpl0ako" path="res://art/playerSoul.png" id="2_o26uv"]
@@ -9,7 +9,6 @@
 [ext_resource type="Texture2D" uid="uid://byvrsvn5joog1" path="res://art/dragonWalk.png" id="6_kkvd2"]
 [ext_resource type="Texture2D" uid="uid://bppsdbv1d8g0l" path="res://art/maroHalo.png" id="7_0w20r"]
 [ext_resource type="Texture2D" uid="uid://cokg8pdynqt67" path="res://art/maroHalo3.png" id="7_3cjpp"]
-[ext_resource type="Texture2D" uid="uid://cu4e5gelu17p0" path="res://art/maro2.png" id="7_gmwqn"]
 [ext_resource type="Texture2D" uid="uid://bfsrdbtpk51lf" path="res://art/playerOrbPurple.png" id="8_mse7n"]
 [ext_resource type="Texture2D" uid="uid://b63ubc6fjyolp" path="res://art/femboy.png" id="9_816nd"]
 [ext_resource type="Texture2D" uid="uid://6xtovhi2710w" path="res://art/playerOrbCyan.png" id="10_ovm1g"]
@@ -97,6 +96,9 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_womuk"]
+size = Vector2(64, 30)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_f5xur"]
 animations = [{
 "frames": [{
@@ -127,17 +129,6 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("10_ovm1g")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_5gfml"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("7_gmwqn")
 }],
 "loop": true,
 "name": &"default",
@@ -205,6 +196,14 @@ sprite_frames = SubResource("SpriteFrames_oeiqe")
 
 [node name="Camera" type="Camera2D" parent="PlayerBody"]
 
+[node name="PlayerBodyCrouch" type="CharacterBody2D" parent="PlayerBody"]
+position = Vector2(0, -47)
+collision_layer = 0
+collision_mask = 17
+
+[node name="PlayerBodyCrouchSpy" type="CollisionShape2D" parent="PlayerBody/PlayerBodyCrouch"]
+shape = SubResource("RectangleShape2D_womuk")
+
 [node name="PlayerSoul" type="CharacterBody2D" parent="."]
 z_index = 1
 collision_layer = 34
@@ -229,11 +228,6 @@ shape = SubResource("CircleShape2D_48scf")
 modulate = Color(1, 1, 1, 0.74902)
 scale = Vector2(0.16, 0.16)
 sprite_frames = SubResource("SpriteFrames_8yyt6")
-
-[node name="Dummy" type="AnimatedSprite2D" parent="."]
-position = Vector2(-234, -151)
-scale = Vector2(1e-05, 1e-05)
-sprite_frames = SubResource("SpriteFrames_5gfml")
 
 [node name="PlayerScout" type="CharacterBody2D" parent="."]
 collision_layer = 8

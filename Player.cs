@@ -18,6 +18,7 @@ public partial class Player : Node2D
     public bool hasMoved = false;
     public bool isCrouched = false;
     public bool tryingToUncrouch = false;
+    public float prevUncrouchMod = 0;
 
     public double energy = 400;
     public double maxEnergy = 400;
@@ -369,12 +370,12 @@ public partial class Player : Node2D
         if (tryingToUncrouch)
         {
             GD.Print("C");
-            TryToUncrouch();
+            TryToUncrouch3();
         }
 
 
         float sneakMod = 1F;
-        if (Input.IsActionPressed("sneak"))
+        if (isCrouched)
         {
             sneakMod = 0.5F;
         }
@@ -488,7 +489,11 @@ public partial class Player : Node2D
         }
         else if (isCrouched && !crouch && body.IsOnFloor() || isCrouched && !body.IsOnFloor())
         {
-            TryToUncrouch();
+            TryToUncrouch3();
+        }
+        else if (crouch)
+        {
+            tryingToUncrouch = false;
         }
         SetBodySpriteImage(body.Velocity, bodySprite);
     }
@@ -540,6 +545,91 @@ public partial class Player : Node2D
             //3. bodyCollision.Position = new Vector(0, ((15F * unCrouchPercent) * size)
             //   bodyCollision.Scale = 0, ((1F * (0.68 + 0.32 * unCrouchPercent)) * size)
 
+    }
+
+    public void TryToUncrouch2()
+    {
+        AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
+        CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
+        Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
+
+
+
+
+
+        Vector2 prevBodyPos = body.GlobalPosition;
+        float uncrouchMod = 1;
+
+        KinematicCollision2D uncrouchCollision = body.MoveAndCollide(new Vector2(0, (-32 * (1 - prevUncrouchMod))));
+        if (uncrouchCollision is not null)
+        {
+            GD.Print("B");
+            Vector2 nextBodyPos = body.GlobalPosition - prevBodyPos;
+            uncrouchMod = (nextBodyPos.Y / 32) * -1;
+            
+        }
+
+
+        //body.Position = new Vector2(body.Position.X, body.Position.Y + 30F * size);
+
+
+        bodySprite.Position = new Vector2(bodySprite.Position.X, (-10F + (10F * uncrouchMod)) * size);
+        bodyCollision.Position = new Vector2(bodySprite.Position.X, ((15F * uncrouchMod) * size));
+        bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, ((1F * (0.68F + 0.32F * uncrouchMod)) * size));
+        camera.Position = new Vector2(0, (-30 + (30 * uncrouchMod)));
+
+        if (uncrouchMod != 1)
+        {
+            tryingToUncrouch = true;
+        }
+        else
+        {
+            isCrouched = false;
+            tryingToUncrouch = false;
+        }
+        prevUncrouchMod = uncrouchMod;
+        GD.Print(uncrouchMod);
+    }
+
+    public void TryToUncrouch3()
+    {
+        AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
+        CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
+        Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
+
+
+        CharacterBody2D crouchScout = GetNode<CharacterBody2D>("PlayerBody/PlayerBodyCrouch");
+        KinematicCollision2D collision = crouchScout.MoveAndCollide(new Vector2(0, 0));
+        if (collision != null)
+        {
+            GD.Print("Collision");
+        }
+        else
+        {
+            GD.Print("No Collision");
+        }
+        crouchScout.Position = new Vector2(0, -47);
+
+
+
+
+        
+        if (collision != null)
+        {
+            tryingToUncrouch = true;
+            GD.Print("B");
+        }
+        else
+        {
+            bodySprite.Position = new Vector2(bodySprite.Position.X, 0F);
+            bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F * size);
+            bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F * size);
+            body.Position = new Vector2(body.Position.X, body.Position.Y - 30F * size);
+            camera.Position = new Vector2(0, 0);
+            isCrouched = false;
+            tryingToUncrouch = false;
+            GD.Print("A");
+        }
     }
 
 
