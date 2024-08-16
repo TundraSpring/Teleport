@@ -101,7 +101,7 @@ position = Vector2(-3202, -1120)
 scale = Vector2(1.5, 2)
 
 [node name="Platform25" parent="." instance=ExtResource("2_hvdsf")]
-position = Vector2(-2725, -660)
+position = Vector2(-3234, -810)
 scale = Vector2(1.5, 2)
 
 [node name="Platform12" parent="." instance=ExtResource("2_hvdsf")]

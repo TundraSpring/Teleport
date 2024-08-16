@@ -6,6 +6,9 @@ using System;
 using System.ComponentModel.Design;
 using System.Reflection;
 using static Godot.TextServer;
+using System.IO;
+using static Godot.OpenXRHand;
+using GodotPlugins.Game;
 
 public partial class Player : Node2D
 {
@@ -19,6 +22,8 @@ public partial class Player : Node2D
     public bool isCrouched = false;
     public bool tryingToUncrouch = false;
     public float prevUncrouchMod = 0;
+    public bool beganJumpThisFrame = false;
+    public bool crouchCollisionThisFrame = false;
 
     public double energy = 400;
     public double maxEnergy = 400;
@@ -50,6 +55,22 @@ public partial class Player : Node2D
         RestoreEnergy();
         MoveBody(delta);
         SetSoulPosition(delta);
+        //beganJumpThisFrame = false;
+        crouchCollisionThisFrame = false;
+        if (Input.IsActionJustPressed("mouse1"))
+        {
+            //var scene = GD.Load<PackedScene>("res://Projectile.tscn");
+            //Projectile instance = (Projectile)scene.Instantiate();
+            //instance.Boo();
+            //var scene2 = ResourceLoader.Load<PackedScene>("res://Projectile.cs").Instantiate();
+
+            PackedScene Projectiles = GD.Load<PackedScene>("res://projectile.tscn");
+            Projectile projectile = (Projectile)Projectiles.Instantiate();
+            projectile.GlobalPosition = body.GlobalPosition;
+            Node node = GetParent(); //Start
+            node.AddChild(projectile);
+            //node.CallDeferred("node.AddChild()", projectile);
+        }
     }
 
     public override void _Process(double delta)
@@ -261,6 +282,7 @@ public partial class Player : Node2D
         body.Velocity = velocity;
         body.MoveAndSlide();
 
+
         if (velocity != Vector2.Zero)
         {
             hasMoved = true;
@@ -302,6 +324,10 @@ public partial class Player : Node2D
                 velocity.Y = (gravity * gravityMod) * 10;
             }
 
+            if (velocity.Y != 0 && gravityMod == 1)
+            {
+                gravityMod = 6;
+            }
             prevGravityMod = gravityMod;
         }
     }
@@ -338,6 +364,7 @@ public partial class Player : Node2D
         if (Input.IsActionJustPressed("jump") && body.IsOnFloor())
         {
             velocity.Y += -1500F * size;
+            beganJumpThisFrame = true;
         }
     }
 
@@ -375,7 +402,7 @@ public partial class Player : Node2D
 
 
         float sneakMod = 1F;
-        if (isCrouched)
+        if (isCrouched || Input.IsActionPressed("sneak"))
         {
             sneakMod = 0.5F;
         }
@@ -602,11 +629,7 @@ public partial class Player : Node2D
         KinematicCollision2D collision = crouchScout.MoveAndCollide(new Vector2(0, 0));
         if (collision != null)
         {
-            GD.Print("Collision");
-        }
-        else
-        {
-            GD.Print("No Collision");
+            crouchCollisionThisFrame = true;
         }
         crouchScout.Position = new Vector2(0, -47);
 
@@ -659,7 +682,7 @@ public partial class Player : Node2D
         {
             bodySprite.Animation = "Walk";
         }
-        else if (body.IsOnFloor() && isCrouched)
+        else if ((body.IsOnFloor() && isCrouched) || (crouchCollisionThisFrame && beganJumpThisFrame))
         {
             bodySprite.Animation = "Crouch";
         }
