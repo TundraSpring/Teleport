@@ -27,6 +27,7 @@ namespace Teleport
             SetPlayer(dna);
             SetFlowers(dna.flowerAmo);
             SetRbs(dna.rbAmo);
+            //playerNodeObj.SetSize(0.5F);
         }
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.

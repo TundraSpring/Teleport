@@ -30,7 +30,7 @@ public partial class Player : Node2D
     public double health = 100;
     public double maxHealth = 100;
     public PlayerMode playerMode;
-    public bool canGlide = false;
+    public bool canGlide = true;
 
     public CharacterBody2D body;
     public CharacterBody2D soul;
@@ -68,7 +68,25 @@ public partial class Player : Node2D
             Projectile projectile = (Projectile)Projectiles.Instantiate();
             projectile.GlobalPosition = body.GlobalPosition;
             Node node = GetParent(); //Start
-            node.AddChild(projectile);
+            //node.AddChild(projectile);
+            body.AddChild(projectile);
+            projectile.GlobalPosition = body.GlobalPosition;
+            AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
+            if (Input.IsActionPressed("up"))
+            {
+                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X, projectile.GlobalPosition.Y - 100);
+            }
+            else if (bodySprite.FlipH)
+            {
+                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X - 100, projectile.GlobalPosition.Y);
+            }
+            else
+            {
+                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X + 100, projectile.GlobalPosition.Y);
+            }
+
+
+
             //node.CallDeferred("node.AddChild()", projectile);
         }
     }
@@ -324,7 +342,7 @@ public partial class Player : Node2D
                 velocity.Y = (gravity * gravityMod) * 10;
             }
 
-            if (velocity.Y != 0 && gravityMod == 1)
+            if (velocity.Y == 0 && gravityMod == 1)
             {
                 gravityMod = 6;
             }
@@ -363,7 +381,15 @@ public partial class Player : Node2D
     {
         if (Input.IsActionJustPressed("jump") && body.IsOnFloor())
         {
-            velocity.Y += -1500F * size;
+            if (isCrouched && energy > 0)
+            {
+                velocity.Y += -2100F * size;
+                UpdateEnergyOrb(-200);
+            }
+            else
+            {
+                velocity.Y += -1500F * size;
+            }
             beganJumpThisFrame = true;
         }
     }

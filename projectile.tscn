@@ -14,3 +14,10 @@ texture = ExtResource("1_e13na")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_86d48")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_86d48")
+
+[connection signal="body_entered" from="Area2D" to="." method="OnProjectileHit"]
