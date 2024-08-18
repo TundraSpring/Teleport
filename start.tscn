@@ -102,7 +102,7 @@ position = Vector2(-3202, -1120)
 scale = Vector2(1.5, 2)
 
 [node name="Platform25" parent="." instance=ExtResource("2_hvdsf")]
-position = Vector2(-3234, -810)
+position = Vector2(-3289, -810)
 scale = Vector2(1.5, 2)
 
 [node name="Platform12" parent="." instance=ExtResource("2_hvdsf")]
@@ -141,26 +141,6 @@ scale = Vector2(25, 5)
 position = Vector2(-8056, -862)
 scale = Vector2(25, 5)
 
-[node name="PlatformBar7" parent="." instance=ExtResource("3_4820q")]
-position = Vector2(-6777, -1197)
-rotation = -1.5708
-scale = Vector2(25, 5)
-
-[node name="PlatformBar10" parent="." instance=ExtResource("3_4820q")]
-position = Vector2(-6669, -1201)
-rotation = -1.5708
-scale = Vector2(25, 5)
-
-[node name="PlatformBar8" parent="." instance=ExtResource("3_4820q")]
-position = Vector2(-6885, -1197)
-rotation = -1.5708
-scale = Vector2(25, 5)
-
-[node name="PlatformBar9" parent="." instance=ExtResource("3_4820q")]
-position = Vector2(-6828, -508)
-rotation = 1.5708
-scale = Vector2(25, 5)
-
 [node name="PlatformBar5" parent="." instance=ExtResource("3_4820q")]
 position = Vector2(-3759, -867)
 scale = Vector2(25, 5)
@@ -176,7 +156,20 @@ position = Vector2(1069, -11)
 scale = Vector2(1.5, 1.5)
 
 [node name="StaticBody2D" parent="." instance=ExtResource("7_48hul")]
-position = Vector2(-2727, -519)
+position = Vector2(-6509, -1197)
+scale = Vector2(0.663766, 3.60991)
+
+[node name="StaticBody2D2" parent="." instance=ExtResource("7_48hul")]
+position = Vector2(-6709, -1201)
+scale = Vector2(0.663766, 3.60991)
+
+[node name="StaticBody2D3" parent="." instance=ExtResource("7_48hul")]
+position = Vector2(-6881, -1197)
+scale = Vector2(0.663766, 3.60991)
+
+[node name="StaticBody2D4" parent="." instance=ExtResource("7_48hul")]
+position = Vector2(-6830, -388)
+scale = Vector2(0.663766, 3.60991)
 
 [connection signal="Interact" from="Player" to="." method="OnPlayerInteract"]
 [connection signal="Hit" from="Dygnflower0" to="." method="OnDygnflowerHit"]

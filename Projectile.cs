@@ -21,7 +21,7 @@ public partial class Projectile : CharacterBody2D
 	{
 		//GlobalPosition = spawnPos;
 		//GlobalRotation = spawnRot;
-		timer = 2;
+		timer = 5;
     }
 
 	public override void _PhysicsProcess(double delta)

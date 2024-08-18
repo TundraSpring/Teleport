@@ -23,7 +23,9 @@ public partial class Player : Node2D
     public bool tryingToUncrouch = false;
     public float prevUncrouchMod = 0;
     public bool beganJumpThisFrame = false;
-    public bool crouchCollisionThisFrame = false;
+    public bool crouchCollisionSinceLastCheck = false;
+    public int slamTimer = -1;
+    public bool slam = false;
 
     public double energy = 400;
     public double maxEnergy = 400;
@@ -56,7 +58,7 @@ public partial class Player : Node2D
         MoveBody(delta);
         SetSoulPosition(delta);
         //beganJumpThisFrame = false;
-        crouchCollisionThisFrame = false;
+        
         if (Input.IsActionJustPressed("mouse1"))
         {
             //var scene = GD.Load<PackedScene>("res://Projectile.tscn");
@@ -88,6 +90,10 @@ public partial class Player : Node2D
 
 
             //node.CallDeferred("node.AddChild()", projectile);
+        }
+        if (body.IsOnFloor())
+        {
+            slam = false;
         }
     }
 
@@ -350,6 +356,7 @@ public partial class Player : Node2D
         }
     }
 
+
     public Vector2 SetFallingVelocityToLightOrHeavy(Vector2 velocity, float gravityMod)
     {
         if (velocity.Y >= 0)
@@ -381,7 +388,15 @@ public partial class Player : Node2D
     {
         if (Input.IsActionJustPressed("jump") && body.IsOnFloor())
         {
-            if (isCrouched && energy > 0)
+            CharacterBody2D crouchScout = GetNode<CharacterBody2D>("PlayerBody/PlayerBodyCrouch");
+            KinematicCollision2D collision = crouchScout.MoveAndCollide(new Vector2(0, 0));
+            if (collision != null)
+            {
+                crouchCollisionSinceLastCheck = true;
+            }
+            crouchScout.Position = new Vector2(0, -47);
+
+            if (isCrouched && energy > 0 && !crouchCollisionSinceLastCheck)
             {
                 velocity.Y += -2100F * size;
                 UpdateEnergyOrb(-200);
@@ -397,7 +412,13 @@ public partial class Player : Node2D
     public float GetGravityMod(Vector2 velocity)
     {
         //This code must be ran after jump velocity has been added
-        if (Input.IsActionPressed("jump") && (velocity.Y <= 0))
+
+        CheckForSlam();
+        if (slam)
+        {
+            return 28F;
+        }
+        else if (Input.IsActionPressed("jump") && (velocity.Y <= 0))
         {
             return 1F;
         }
@@ -418,11 +439,34 @@ public partial class Player : Node2D
         }
     }
 
+    public void CheckForSlam()
+    {
+        if (Input.IsActionJustPressed("sneak") && !body.IsOnFloor() && slamTimer != -1)
+        {
+            if (energy > 0)
+            {
+                AddEnergy(-200);
+                slam = true;
+                slamTimer = -1;
+                return;
+            }
+        }
+        if (Input.IsActionJustPressed("sneak") && !body.IsOnFloor() && slamTimer == -1)
+        {
+            GD.Print("timer activated");
+            slamTimer = 30;
+        }
+        if (slamTimer > -1)
+        {
+            GD.Print(slamTimer);
+            slamTimer--;
+        }
+    }
+
     public void MoveBodyHorizontally(ref Vector2 velocity)
     {
         if (tryingToUncrouch)
         {
-            GD.Print("C");
             TryToUncrouch3();
         }
 
@@ -562,7 +606,6 @@ public partial class Player : Node2D
         {
             bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 0.68F * size);
             tryingToUncrouch = true;
-            GD.Print("B");
         }
         else
         {
@@ -572,7 +615,6 @@ public partial class Player : Node2D
             camera.Position = new Vector2(0, 0);
             isCrouched = false;
             tryingToUncrouch = false;
-            GD.Print("A");
         }
 
             //Crouched
@@ -616,7 +658,6 @@ public partial class Player : Node2D
         KinematicCollision2D uncrouchCollision = body.MoveAndCollide(new Vector2(0, (-32 * (1 - prevUncrouchMod))));
         if (uncrouchCollision is not null)
         {
-            GD.Print("B");
             Vector2 nextBodyPos = body.GlobalPosition - prevBodyPos;
             uncrouchMod = (nextBodyPos.Y / 32) * -1;
             
@@ -646,6 +687,7 @@ public partial class Player : Node2D
 
     public void TryToUncrouch3()
     {
+        crouchCollisionSinceLastCheck = false;
         AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
         CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
         Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
@@ -655,7 +697,7 @@ public partial class Player : Node2D
         KinematicCollision2D collision = crouchScout.MoveAndCollide(new Vector2(0, 0));
         if (collision != null)
         {
-            crouchCollisionThisFrame = true;
+            crouchCollisionSinceLastCheck = true;
         }
         crouchScout.Position = new Vector2(0, -47);
 
@@ -666,7 +708,6 @@ public partial class Player : Node2D
         if (collision != null)
         {
             tryingToUncrouch = true;
-            GD.Print("B");
         }
         else
         {
@@ -677,7 +718,6 @@ public partial class Player : Node2D
             camera.Position = new Vector2(0, 0);
             isCrouched = false;
             tryingToUncrouch = false;
-            GD.Print("A");
         }
     }
 
@@ -708,7 +748,7 @@ public partial class Player : Node2D
         {
             bodySprite.Animation = "Walk";
         }
-        else if ((body.IsOnFloor() && isCrouched) || (crouchCollisionThisFrame && beganJumpThisFrame))
+        else if ((body.IsOnFloor() && isCrouched) || (crouchCollisionSinceLastCheck && beganJumpThisFrame))
         {
             bodySprite.Animation = "Crouch";
         }
