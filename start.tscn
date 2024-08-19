@@ -152,7 +152,7 @@ position = Vector2(-1182, -23)
 position = Vector2(-9454, 62)
 
 [node name="RoomBridge0" parent="." instance=ExtResource("6_exg1d")]
-position = Vector2(1069, -11)
+position = Vector2(-10189, -54)
 scale = Vector2(1.5, 1.5)
 
 [node name="StaticBody2D" parent="." instance=ExtResource("7_48hul")]

@@ -32,7 +32,8 @@ public partial class Player : Node2D
     public double health = 100;
     public double maxHealth = 100;
     public PlayerMode playerMode;
-    public bool canGlide = true;
+    public PlayerBodyStatus bodyStatus;
+    public bool canGlide = false;
 
     public CharacterBody2D body;
     public CharacterBody2D soul;
@@ -395,7 +396,6 @@ public partial class Player : Node2D
                 crouchCollisionSinceLastCheck = true;
             }
             crouchScout.Position = new Vector2(0, -47);
-
             if (isCrouched && energy > 0 && !crouchCollisionSinceLastCheck)
             {
                 velocity.Y += -2100F * size;
@@ -403,7 +403,7 @@ public partial class Player : Node2D
             }
             else
             {
-                velocity.Y += -1500F * size;
+                velocity.Y += -750F * size;
             }
             beganJumpThisFrame = true;
         }
@@ -763,6 +763,69 @@ public partial class Player : Node2D
         else if (body.GlobalPosition.Y < velocity.Y && (prevGravityMod == 7 || prevGravityMod == 6))
         {
             bodySprite.Animation = "Fall";
+        }
+    }
+
+    public void SetPlayerBodyStatus()
+    {
+        if (body.IsOnFloor())
+        {
+            if (!isCrouched)
+            {
+                if (body.Velocity.X != 0)
+                {
+                    bodyStatus = PlayerBodyStatus.Walking;
+                }
+                else
+                {
+                    bodyStatus = PlayerBodyStatus.Idle;
+                }
+            }
+            else
+            {
+                CharacterBody2D crouchScout = GetNode<CharacterBody2D>("PlayerBody/PlayerBodyCrouch");
+                KinematicCollision2D collision = crouchScout.MoveAndCollide(new Vector2(0, 0));
+                crouchScout.Position = new Vector2(0, -47);
+
+                if (collision == null)
+                {
+                    bodyStatus = PlayerBodyStatus.Crouching;
+                }
+                else
+                {
+                    bodyStatus = PlayerBodyStatus.CrouchingCramped;
+                }
+            }
+        }
+        else
+        {
+            if (body.Velocity.Y < 0)
+            {
+                if (body.Velocity.Y < -1500)
+                {
+                    bodyStatus = PlayerBodyStatus.HighJumping;
+                }
+                else if (body.Velocity.Y < 0)
+                {
+                    bodyStatus = PlayerBodyStatus.Jumping;
+                }
+                
+            }
+            else
+            {
+                if (prevGravityMod == 1)
+                {
+                    bodyStatus = PlayerBodyStatus.Gliding;
+                }
+                else if (prevGravityMod > 7)
+                {
+                    bodyStatus = PlayerBodyStatus.FastFalling;
+                }
+                else if (prevGravityMod > 1)
+                {
+                    bodyStatus = PlayerBodyStatus.Falling;
+                }
+            }
         }
     }
 
