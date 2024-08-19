@@ -829,6 +829,75 @@ public partial class Player : Node2D
         }
     }
 
+    public void SetPlayerBodyStatus2()
+    {
+        bool crouching = false;
+        if (Input.IsActionPressed("sneak"))
+        {
+            CharacterBody2D crouchScout = GetNode<CharacterBody2D>("PlayerBody/PlayerBodyCrouch");
+            KinematicCollision2D collision = crouchScout.MoveAndCollide(new Vector2(0, 0));
+            crouchScout.Position = new Vector2(0, -47);
+
+            if (collision != null)
+            {
+                bodyStatus = PlayerBodyStatus.CrouchingCramped;
+                return;
+            }
+            else
+            {
+                crouching = true;
+            }
+        }
+        if (body.IsOnFloor())
+        {
+            if (!crouching)
+            {
+                if (body.Velocity.X != 0)
+                {
+                    bodyStatus = PlayerBodyStatus.Walking;
+                }
+                else
+                {
+                    bodyStatus = PlayerBodyStatus.Idle;
+                }
+            }
+            else
+            {
+                bodyStatus = PlayerBodyStatus.Crouching;
+            }
+        }
+        else
+        {
+            if (body.Velocity.Y < 0)
+            {
+                if (body.Velocity.Y < -1500)
+                {
+                    bodyStatus = PlayerBodyStatus.HighJumping;
+                }
+                else if (body.Velocity.Y < 0)
+                {
+                    bodyStatus = PlayerBodyStatus.Jumping;
+                }
+                
+            }
+            else
+            {
+                if (prevGravityMod == 1)
+                {
+                    bodyStatus = PlayerBodyStatus.Gliding;
+                }
+                else if (prevGravityMod > 7)
+                {
+                    bodyStatus = PlayerBodyStatus.FastFalling;
+                }
+                else if (prevGravityMod > 1)
+                {
+                    bodyStatus = PlayerBodyStatus.Falling;
+                }
+            }
+        }
+    }
+
     public void SetSoulPosition(double delta)
     {
         PreventIllegalSoulDistance();
