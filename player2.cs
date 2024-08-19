@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Drawing;
 using static System.Formats.Asn1.AsnWriter;
 
 public partial class player2 : Area2D
@@ -789,15 +790,237 @@ public partial class player2 : Area2D
 
 
 
+        //public void TryToUncrouch2()
+        //{
+        //    AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
+        //    CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
+        //    Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
 
 
 
 
 
+        //    Vector2 prevBodyPos = body.GlobalPosition;
+        //    float uncrouchMod = 1;
+
+        //    KinematicCollision2D uncrouchCollision = body.MoveAndCollide(new Vector2(0, (-32 * (1 - prevUncrouchMod))));
+        //    if (uncrouchCollision is not null)
+        //    {
+        //        Vector2 nextBodyPos = body.GlobalPosition - prevBodyPos;
+        //        uncrouchMod = (nextBodyPos.Y / 32) * -1;
+
+        //    }
+
+
+        //    //body.Position = new Vector2(body.Position.X, body.Position.Y + 30F * size);
+
+
+        //    bodySprite.Position = new Vector2(bodySprite.Position.X, (-10F + (10F * uncrouchMod)) * size);
+        //    bodyCollision.Position = new Vector2(bodySprite.Position.X, ((15F * uncrouchMod) * size));
+        //    bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, ((1F * (0.68F + 0.32F * uncrouchMod)) * size));
+        //    camera.Position = new Vector2(0, (-30 + (30 * uncrouchMod)));
+
+        //    if (uncrouchMod != 1)
+        //    {
+        //        tryingToUncrouch = true;
+        //    }
+        //    else
+        //    {
+        //        isCrouched = false;
+        //        tryingToUncrouch = false;
+        //    }
+        //    prevUncrouchMod = uncrouchMod;
+        //    GD.Print(uncrouchMod);
+        //}
 
 
 
+        //public void TryToUncrouch()
+        //{
+        //    AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
+        //    CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
+        //    Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
 
+        //    bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F * size);
+        //    if (body.IsOnFloor() && body.IsOnCeiling())
+        //    {
+        //        bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 0.68F * size);
+        //        tryingToUncrouch = true;
+        //    }
+        //    else
+        //    {
+        //        bodySprite.Position = new Vector2(bodySprite.Position.X, 0F);
+        //        bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F * size);
+        //        body.Position = new Vector2(body.Position.X, body.Position.Y - 30F * size);
+        //        camera.Position = new Vector2(0, 0);
+        //        isCrouched = false;
+        //        tryingToUncrouch = false;
+        //    }
+
+        //    //Crouched
+        //    //bodyCollision.Position = 0, 0
+        //    //bodyCollision.Scale = 0, (0.68F * size)
+
+        //    //Half uncrouched?
+        //    //bodyCollision.Position = 0, (7.5F * size)
+        //    //bodyCollision.Scale = 0, (0.84F * size)
+
+        //    //Uncrouched
+        //    //bodyCollision.Position = 0, (15F * size)
+        //    //bodyCollision.Scale = 0, (1F * size)
+
+
+        //    //bodyCollision.Position = 0, ((15F * unCrouchPercent) * size)
+        //    //bodyCollision.Scale = 0, ((1F * (0.68 + 0.32 * unCrouchPercent )) * size)
+
+        //    //0. (You are crouched)
+        //    //1. MoveAndCollide bodycollision from (0, 0) to (0, -32)
+        //    //2. unCrouchPercent = bodyCollision.Position.Y / 32
+        //    //   (If it goes halfway, then it will be 16 / 32 = 0.5)
+        //    //3. bodyCollision.Position = new Vector(0, ((15F * unCrouchPercent) * size)
+        //    //   bodyCollision.Scale = 0, ((1F * (0.68 + 0.32 * unCrouchPercent)) * size)
+
+        //}
+
+        //public void ToggleCrouchMode()
+        //{
+
+        //    bool crouch = Input.IsActionPressed("sneak");
+
+        //    AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
+        //    CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
+        //    Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
+
+        //    if (!isCrouched && crouch && body.IsOnFloor())
+        //    {
+        //        bodySprite.Position = new Vector2(bodySprite.Position.X, -10F);
+        //        bodyCollision.Position = new Vector2(bodySprite.Position.X, 0F);
+        //        bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 0.68F);
+        //        body.Position = new Vector2(body.Position.X, body.Position.Y + 30F);
+        //        camera.Position = new Vector2(0, -30);
+        //        isCrouched = true;
+        //    }
+        //    else if (isCrouched && !crouch && body.IsOnFloor())
+        //    {
+        //        bodySprite.Position = new Vector2(bodySprite.Position.X, 0F);
+        //        bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F);
+        //        bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F);
+        //        body.Position = new Vector2(body.Position.X, body.Position.Y - 30F);
+        //        camera.Position = new Vector2(0, 0);
+        //        isCrouched = false;
+        //    }
+        //    else if (isCrouched && !body.IsOnFloor())
+        //    {
+        //        bodySprite.Position = new Vector2(bodySprite.Position.X, 0F);
+        //        bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F);
+        //        bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F);
+        //        body.Position = new Vector2(body.Position.X, body.Position.Y - 30F);
+        //        camera.Position = new Vector2(0, 0);
+        //        isCrouched = false;
+        //    }
+        //    SetBodySpriteImage(body.Velocity, bodySprite);
+        //}
+
+        //public void ToggleCrouchMode2()
+        //{
+        //    bool crouch = Input.IsActionPressed("sneak");
+
+        //    AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
+        //    CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
+        //    Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
+
+        //    if (!isCrouched && crouch && body.IsOnFloor())
+        //    {
+        //        bodySprite.Position = new Vector2(bodySprite.Position.X, -10F * size);
+        //        bodyCollision.Position = new Vector2(bodySprite.Position.X, 0F);
+        //        bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 0.68F * size);
+        //        body.Position = new Vector2(body.Position.X, body.Position.Y + 30F * size);
+        //        camera.Position = new Vector2(0, -30);
+        //        isCrouched = true;
+        //    }
+        //    else if (isCrouched && !crouch && body.IsOnFloor())
+        //    {
+        //        bodySprite.Position = new Vector2(bodySprite.Position.X, 0F);
+        //        bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F * size);
+        //        bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F * size);
+        //        body.Position = new Vector2(body.Position.X, body.Position.Y - 30F * size);
+        //        camera.Position = new Vector2(0, 0);
+        //        isCrouched = false;
+        //    }
+        //    else if (isCrouched && !body.IsOnFloor())
+        //    {
+        //        bodySprite.Position = new Vector2(bodySprite.Position.X, 0F);
+        //        bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F * size);
+        //        bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F * size);
+        //        body.Position = new Vector2(body.Position.X, body.Position.Y - 30F * size);
+        //        camera.Position = new Vector2(0, 0);
+        //        isCrouched = false;
+        //    }
+        //    SetBodySpriteImage(body.Velocity, bodySprite);
+        //}
+
+        //public void SetPlayerBodyStatus()
+        //{
+        //    if (body.IsOnFloor())
+        //    {
+        //        if (!isCrouched)
+        //        {
+        //            if (body.Velocity.X != 0)
+        //            {
+        //                bodyStatus = PlayerBodyStatus.Walking;
+        //            }
+        //            else
+        //            {
+        //                bodyStatus = PlayerBodyStatus.Idle;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            CharacterBody2D crouchScout = GetNode<CharacterBody2D>("PlayerBody/PlayerBodyCrouch");
+        //            KinematicCollision2D collision = crouchScout.MoveAndCollide(new Vector2(0, 0));
+        //            crouchScout.Position = new Vector2(0, -47);
+
+        //            if (collision == null)
+        //            {
+        //                bodyStatus = PlayerBodyStatus.Crouching;
+        //            }
+        //            else
+        //            {
+        //                bodyStatus = PlayerBodyStatus.CrouchingCramped;
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (body.Velocity.Y < 0)
+        //        {
+        //            if (body.Velocity.Y < -1500)
+        //            {
+        //                bodyStatus = PlayerBodyStatus.HighJumping;
+        //            }
+        //            else if (body.Velocity.Y < 0)
+        //            {
+        //                bodyStatus = PlayerBodyStatus.Jumping;
+        //            }
+
+        //        }
+        //        else
+        //        {
+        //            if (prevGravityMod == 1)
+        //            {
+        //                bodyStatus = PlayerBodyStatus.Gliding;
+        //            }
+        //            else if (prevGravityMod > 7)
+        //            {
+        //                bodyStatus = PlayerBodyStatus.FastFalling;
+        //            }
+        //            else if (prevGravityMod > 1)
+        //            {
+        //                bodyStatus = PlayerBodyStatus.Falling;
+        //            }
+        //        }
+        //    }
+        //}
 
 
 

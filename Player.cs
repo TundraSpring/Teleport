@@ -13,19 +13,19 @@ using GodotPlugins.Game;
 public partial class Player : Node2D
 {
     public float speed = 800; // How fast the player will move (pixels/sec).
-    public float JumpVelocity = -1500F;
+    //public float JumpVelocity = -1500F;
     public float size;
     public Vector2 prevEventMousePos = new Vector2(0, 0);
-    public float gravity = 25F;
+    //public float gravity = 25F;
     public float prevGravityMod = 7;
     public bool hasMoved = false;
-    public bool isCrouched = false;
-    public bool tryingToUncrouch = false;
-    public float prevUncrouchMod = 0;
-    public bool beganJumpThisFrame = false;
-    public bool crouchCollisionSinceLastCheck = false;
-    public int slamTimer = -1;
-    public bool slam = false;
+    //public bool isCrouched = false;
+    //public bool tryingToUncrouch = false;
+    //public float prevUncrouchMod = 0;
+    //public bool beganJumpThisFrame = false;
+    //public bool crouchCollisionSinceLastCheck = false;
+    public int fastFallInputTimer = -1;
+    //public bool slam = false;
 
     public double energy = 400;
     public double maxEnergy = 400;
@@ -33,7 +33,7 @@ public partial class Player : Node2D
     public double maxHealth = 100;
     public PlayerMode playerMode;
     public PlayerBodyStatus bodyStatus;
-    public bool canGlide = false;
+    public bool canGlide = true;
 
     public CharacterBody2D body;
     public CharacterBody2D soul;
@@ -92,10 +92,10 @@ public partial class Player : Node2D
 
             //node.CallDeferred("node.AddChild()", projectile);
         }
-        if (body.IsOnFloor())
-        {
-            slam = false;
-        }
+        //if (body.IsOnFloor())
+        //{
+        //    slam = false;
+        //}
     }
 
     public override void _Process(double delta)
@@ -299,9 +299,11 @@ public partial class Player : Node2D
     public void MoveBody(double delta)
     {
         bool onGroundBefore = body.IsOnFloor();
+        bool crouchedBefore = (bodyStatus == PlayerBodyStatus.Crouching || bodyStatus == PlayerBodyStatus.CrouchingCramped);
         Vector2 velocity = body.Velocity;
         MoveBodyVertically(ref velocity);
         MoveBodyHorizontally(ref velocity);
+        SetPlayerBodyStatus2();
         SetBodySprite(velocity);
 
         body.Velocity = velocity;
@@ -325,7 +327,7 @@ public partial class Player : Node2D
 
         if (!body.IsOnFloor())
         {
-            float gravity = this.gravity * size;
+            float gravity = 25F * size;
             float gravityMod = GetGravityMod(velocity);
 
             //Sets velocity to 0 when velocity goes in the positives to make sure gravityMod works correctly
@@ -389,23 +391,15 @@ public partial class Player : Node2D
     {
         if (Input.IsActionJustPressed("jump") && body.IsOnFloor())
         {
-            CharacterBody2D crouchScout = GetNode<CharacterBody2D>("PlayerBody/PlayerBodyCrouch");
-            KinematicCollision2D collision = crouchScout.MoveAndCollide(new Vector2(0, 0));
-            if (collision != null)
-            {
-                crouchCollisionSinceLastCheck = true;
-            }
-            crouchScout.Position = new Vector2(0, -47);
-            if (isCrouched && energy > 0 && !crouchCollisionSinceLastCheck)
+            if (bodyStatus == PlayerBodyStatus.Crouching && energy > 0)
             {
                 velocity.Y += -2100F * size;
                 UpdateEnergyOrb(-200);
             }
             else
             {
-                velocity.Y += -750F * size;
+                velocity.Y += -1500F * size;
             }
-            beganJumpThisFrame = true;
         }
     }
 
@@ -414,7 +408,7 @@ public partial class Player : Node2D
         //This code must be ran after jump velocity has been added
 
         CheckForSlam();
-        if (slam)
+        if (bodyStatus == PlayerBodyStatus.FastFalling)
         {
             return 28F;
         }
@@ -441,38 +435,33 @@ public partial class Player : Node2D
 
     public void CheckForSlam()
     {
-        if (Input.IsActionJustPressed("sneak") && !body.IsOnFloor() && slamTimer != -1)
+        if (Input.IsActionJustPressed("sneak") && !body.IsOnFloor() && bodyStatus != PlayerBodyStatus.CrouchingCramped && fastFallInputTimer != -1 && energy > 0)
         {
-            if (energy > 0)
-            {
-                AddEnergy(-200);
-                slam = true;
-                slamTimer = -1;
-                return;
-            }
+            AddEnergy(-200);
+            bodyStatus = PlayerBodyStatus.FastFalling;
+            fastFallInputTimer = -1;
+            return;
         }
-        if (Input.IsActionJustPressed("sneak") && !body.IsOnFloor() && slamTimer == -1)
+        if (Input.IsActionJustPressed("sneak") && !body.IsOnFloor() && bodyStatus != PlayerBodyStatus.CrouchingCramped && fastFallInputTimer == -1)
         {
-            GD.Print("timer activated");
-            slamTimer = 30;
+            fastFallInputTimer = 30;
         }
-        if (slamTimer > -1)
+        if (fastFallInputTimer > -1)
         {
-            GD.Print(slamTimer);
-            slamTimer--;
+            fastFallInputTimer--;
         }
     }
 
     public void MoveBodyHorizontally(ref Vector2 velocity)
     {
-        if (tryingToUncrouch)
+        if ((bodyStatus == PlayerBodyStatus.Crouching || bodyStatus == PlayerBodyStatus.CrouchingCramped) && !Input.IsActionPressed("sneak"))
         {
             TryToUncrouch3();
         }
 
 
         float sneakMod = 1F;
-        if (isCrouched || Input.IsActionPressed("sneak"))
+        if (bodyStatus == PlayerBodyStatus.Crouching || bodyStatus == PlayerBodyStatus.CrouchingCramped || Input.IsActionPressed("sneak"))
         {
             sneakMod = 0.5F;
         }
@@ -489,93 +478,25 @@ public partial class Player : Node2D
         }
     }
 
-    public void ToggleCrouchMode()
-    {
-        
-        bool crouch = Input.IsActionPressed("sneak");
 
-        AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
-        CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
-        Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
-
-        if (!isCrouched && crouch && body.IsOnFloor())
-        {
-            bodySprite.Position = new Vector2(bodySprite.Position.X, -10F);
-            bodyCollision.Position = new Vector2(bodySprite.Position.X, 0F);
-            bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 0.68F);
-            body.Position = new Vector2(body.Position.X, body.Position.Y + 30F);
-            camera.Position = new Vector2(0, -30);
-            isCrouched = true;
-        }
-        else if (isCrouched && !crouch && body.IsOnFloor())
-        {
-            bodySprite.Position = new Vector2(bodySprite.Position.X, 0F);
-            bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F);
-            bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F);
-            body.Position = new Vector2(body.Position.X, body.Position.Y - 30F);
-            camera.Position = new Vector2(0, 0);
-            isCrouched = false;
-        }
-        else if (isCrouched && !body.IsOnFloor())
-        {
-            bodySprite.Position = new Vector2(bodySprite.Position.X, 0F);
-            bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F);
-            bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F);
-            body.Position = new Vector2(body.Position.X, body.Position.Y - 30F);
-            camera.Position = new Vector2(0, 0);
-            isCrouched = false;
-        }
-        SetBodySpriteImage(body.Velocity, bodySprite);
-    }
-
-    public void ToggleCrouchMode2()
-    {
-        bool crouch = Input.IsActionPressed("sneak");
-
-        AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
-        CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
-        Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
-
-        if (!isCrouched && crouch && body.IsOnFloor())
-        {
-            bodySprite.Position = new Vector2(bodySprite.Position.X, -10F * size);
-            bodyCollision.Position = new Vector2(bodySprite.Position.X, 0F);
-            bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 0.68F * size);
-            body.Position = new Vector2(body.Position.X, body.Position.Y + 30F * size);
-            camera.Position = new Vector2(0, -30);
-            isCrouched = true;
-        }
-        else if (isCrouched && !crouch && body.IsOnFloor())
-        {
-            bodySprite.Position = new Vector2(bodySprite.Position.X, 0F);
-            bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F * size);
-            bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F * size);
-            body.Position = new Vector2(body.Position.X, body.Position.Y - 30F * size);
-            camera.Position = new Vector2(0, 0);
-            isCrouched = false;
-        }
-        else if (isCrouched && !body.IsOnFloor())
-        {
-            bodySprite.Position = new Vector2(bodySprite.Position.X, 0F);
-            bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F * size);
-            bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F * size);
-            body.Position = new Vector2(body.Position.X, body.Position.Y - 30F * size);
-            camera.Position = new Vector2(0, 0);
-            isCrouched = false;
-        }
-        SetBodySpriteImage(body.Velocity, bodySprite);
-    }
 
 
     public void ToggleCrouchMode3()
     {
-        bool crouch = Input.IsActionPressed("sneak");
+        
 
         AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
         CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
         Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
 
-        if (!isCrouched && crouch && body.IsOnFloor())
+        bool isCrouched = false;
+        bool crouchNow = Input.IsActionPressed("sneak");
+        if (bodyCollision.Position.Y == 0F)
+        {
+            isCrouched = true;
+        }
+
+        if (!isCrouched && crouchNow && body.IsOnFloor())
         {
             bodySprite.Position = new Vector2(bodySprite.Position.X, -10F * size);
             bodyCollision.Position = new Vector2(bodySprite.Position.X, 0F);
@@ -584,140 +505,38 @@ public partial class Player : Node2D
             camera.Position = new Vector2(0, -30);
             isCrouched = true;
         }
-        else if (isCrouched && !crouch && body.IsOnFloor() || isCrouched && !body.IsOnFloor())
+        else if (isCrouched && !crouchNow && body.IsOnFloor() || isCrouched && !body.IsOnFloor())
         {
             TryToUncrouch3();
         }
-        else if (crouch)
+        else if (crouchNow)
         {
-            tryingToUncrouch = false;
+            //tryingToUncrouch = false;
         }
         SetBodySpriteImage(body.Velocity, bodySprite);
     }
 
-    public void TryToUncrouch()
-    {
-        AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
-        CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
-        Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
-
-        bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F * size);
-        if (body.IsOnFloor() && body.IsOnCeiling())
-        {
-            bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 0.68F * size);
-            tryingToUncrouch = true;
-        }
-        else
-        {
-            bodySprite.Position = new Vector2(bodySprite.Position.X, 0F);
-            bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F * size);
-            body.Position = new Vector2(body.Position.X, body.Position.Y - 30F * size);
-            camera.Position = new Vector2(0, 0);
-            isCrouched = false;
-            tryingToUncrouch = false;
-        }
-
-            //Crouched
-            //bodyCollision.Position = 0, 0
-            //bodyCollision.Scale = 0, (0.68F * size)
-
-            //Half uncrouched?
-            //bodyCollision.Position = 0, (7.5F * size)
-            //bodyCollision.Scale = 0, (0.84F * size)
-
-            //Uncrouched
-            //bodyCollision.Position = 0, (15F * size)
-            //bodyCollision.Scale = 0, (1F * size)
-
-
-            //bodyCollision.Position = 0, ((15F * unCrouchPercent) * size)
-            //bodyCollision.Scale = 0, ((1F * (0.68 + 0.32 * unCrouchPercent )) * size)
-
-            //0. (You are crouched)
-            //1. MoveAndCollide bodycollision from (0, 0) to (0, -32)
-            //2. unCrouchPercent = bodyCollision.Position.Y / 32
-            //   (If it goes halfway, then it will be 16 / 32 = 0.5)
-            //3. bodyCollision.Position = new Vector(0, ((15F * unCrouchPercent) * size)
-            //   bodyCollision.Scale = 0, ((1F * (0.68 + 0.32 * unCrouchPercent)) * size)
-
-    }
-
-    public void TryToUncrouch2()
-    {
-        AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
-        CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
-        Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
-
-
-
-
-
-        Vector2 prevBodyPos = body.GlobalPosition;
-        float uncrouchMod = 1;
-
-        KinematicCollision2D uncrouchCollision = body.MoveAndCollide(new Vector2(0, (-32 * (1 - prevUncrouchMod))));
-        if (uncrouchCollision is not null)
-        {
-            Vector2 nextBodyPos = body.GlobalPosition - prevBodyPos;
-            uncrouchMod = (nextBodyPos.Y / 32) * -1;
-            
-        }
-
-
-        //body.Position = new Vector2(body.Position.X, body.Position.Y + 30F * size);
-
-
-        bodySprite.Position = new Vector2(bodySprite.Position.X, (-10F + (10F * uncrouchMod)) * size);
-        bodyCollision.Position = new Vector2(bodySprite.Position.X, ((15F * uncrouchMod) * size));
-        bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, ((1F * (0.68F + 0.32F * uncrouchMod)) * size));
-        camera.Position = new Vector2(0, (-30 + (30 * uncrouchMod)));
-
-        if (uncrouchMod != 1)
-        {
-            tryingToUncrouch = true;
-        }
-        else
-        {
-            isCrouched = false;
-            tryingToUncrouch = false;
-        }
-        prevUncrouchMod = uncrouchMod;
-        GD.Print(uncrouchMod);
-    }
-
     public void TryToUncrouch3()
     {
-        crouchCollisionSinceLastCheck = false;
-        AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
-        CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
-        Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
-
-
-        CharacterBody2D crouchScout = GetNode<CharacterBody2D>("PlayerBody/PlayerBodyCrouch");
-        KinematicCollision2D collision = crouchScout.MoveAndCollide(new Vector2(0, 0));
-        if (collision != null)
+        if (!Input.IsActionPressed("sneak"))
         {
-            crouchCollisionSinceLastCheck = true;
-        }
-        crouchScout.Position = new Vector2(0, -47);
+            //Make the "check for crouch scout collision" part it's own method later
+            CharacterBody2D crouchScout = GetNode<CharacterBody2D>("PlayerBody/PlayerBodyCrouch");
+            KinematicCollision2D collision = crouchScout.MoveAndCollide(new Vector2(0, 0));
+            crouchScout.Position = new Vector2(0, -47);
 
+            if (collision == null)
+            {
+                AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
+                CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
+                Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
 
-
-
-        
-        if (collision != null)
-        {
-            tryingToUncrouch = true;
-        }
-        else
-        {
-            bodySprite.Position = new Vector2(bodySprite.Position.X, 0F);
-            bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F * size);
-            bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F * size);
-            body.Position = new Vector2(body.Position.X, body.Position.Y - 30F * size);
-            camera.Position = new Vector2(0, 0);
-            isCrouched = false;
-            tryingToUncrouch = false;
+                bodySprite.Position = new Vector2(bodySprite.Position.X, 0F);
+                bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F * size);
+                bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F * size);
+                body.Position = new Vector2(body.Position.X, body.Position.Y - 30F * size);
+                camera.Position = new Vector2(0, 0);
+            }
         }
     }
 
@@ -727,7 +546,7 @@ public partial class Player : Node2D
         velocity += body.GlobalPosition;
         AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
         SetBodySpriteDirection(velocity, bodySprite);
-        SetBodySpriteImage(velocity, bodySprite);
+        SetBodySpriteImage2(bodySprite);
     }
 
     public void SetBodySpriteDirection(Vector2 velocity, AnimatedSprite2D bodySprite)
@@ -744,89 +563,71 @@ public partial class Player : Node2D
 
     public void SetBodySpriteImage(Vector2 velocity, AnimatedSprite2D bodySprite)
     {
-        if (body.IsOnFloor() && !isCrouched)
+        //if (body.IsOnFloor() && !isCrouched)
+        //{
+        //    bodySprite.Animation = "Walk";
+        //}
+        //else if ((body.IsOnFloor() && isCrouched) || (crouchCollisionSinceLastCheck && beganJumpThisFrame))
+        //{
+        //    bodySprite.Animation = "Crouch";
+        //}
+        //else if (body.GlobalPosition.Y > velocity.Y)
+        //{
+        //    bodySprite.Animation = "Jump";
+        //}
+        //else if (body.GlobalPosition.Y < velocity.Y && prevGravityMod == 1)
+        //{
+        //    bodySprite.Animation = "Glide";
+        //}
+        //else if (body.GlobalPosition.Y < velocity.Y && (prevGravityMod == 7 || prevGravityMod == 6))
+        //{
+        //    bodySprite.Animation = "Fall";
+        //}
+    }
+
+    public void SetBodySpriteImage2(AnimatedSprite2D bodySprite)
+    {
+        if (bodyStatus == PlayerBodyStatus.Idle)
         {
             bodySprite.Animation = "Walk";
         }
-        else if ((body.IsOnFloor() && isCrouched) || (crouchCollisionSinceLastCheck && beganJumpThisFrame))
+        else if (bodyStatus == PlayerBodyStatus.Walking)
+        {
+            bodySprite.Animation = "Walk";
+        }
+        else if (bodyStatus == PlayerBodyStatus.Crouching)
         {
             bodySprite.Animation = "Crouch";
         }
-        else if (body.GlobalPosition.Y > velocity.Y)
+        else if (bodyStatus == PlayerBodyStatus.CrouchingCramped)
+        {
+            bodySprite.Animation = "Crouch";
+        }
+        else if (bodyStatus == PlayerBodyStatus.Jumping)
         {
             bodySprite.Animation = "Jump";
         }
-        else if (body.GlobalPosition.Y < velocity.Y && prevGravityMod == 1)
+        else if (bodyStatus == PlayerBodyStatus.HighJumping)
         {
-            bodySprite.Animation = "Glide";
+            bodySprite.Animation = "Jump";
         }
-        else if (body.GlobalPosition.Y < velocity.Y && (prevGravityMod == 7 || prevGravityMod == 6))
+        else if (bodyStatus == PlayerBodyStatus.Longjumping)
+        {
+            bodySprite.Animation = "Jump";
+        }
+        else if (bodyStatus == PlayerBodyStatus.Falling)
         {
             bodySprite.Animation = "Fall";
         }
-    }
-
-    public void SetPlayerBodyStatus()
-    {
-        if (body.IsOnFloor())
+        else if (bodyStatus == PlayerBodyStatus.Gliding)
         {
-            if (!isCrouched)
-            {
-                if (body.Velocity.X != 0)
-                {
-                    bodyStatus = PlayerBodyStatus.Walking;
-                }
-                else
-                {
-                    bodyStatus = PlayerBodyStatus.Idle;
-                }
-            }
-            else
-            {
-                CharacterBody2D crouchScout = GetNode<CharacterBody2D>("PlayerBody/PlayerBodyCrouch");
-                KinematicCollision2D collision = crouchScout.MoveAndCollide(new Vector2(0, 0));
-                crouchScout.Position = new Vector2(0, -47);
-
-                if (collision == null)
-                {
-                    bodyStatus = PlayerBodyStatus.Crouching;
-                }
-                else
-                {
-                    bodyStatus = PlayerBodyStatus.CrouchingCramped;
-                }
-            }
+            bodySprite.Animation = "Glide";
         }
-        else
+        else // (bodyStatus == PlayerBodyStatus.FastFalling)
         {
-            if (body.Velocity.Y < 0)
-            {
-                if (body.Velocity.Y < -1500)
-                {
-                    bodyStatus = PlayerBodyStatus.HighJumping;
-                }
-                else if (body.Velocity.Y < 0)
-                {
-                    bodyStatus = PlayerBodyStatus.Jumping;
-                }
-                
-            }
-            else
-            {
-                if (prevGravityMod == 1)
-                {
-                    bodyStatus = PlayerBodyStatus.Gliding;
-                }
-                else if (prevGravityMod > 7)
-                {
-                    bodyStatus = PlayerBodyStatus.FastFalling;
-                }
-                else if (prevGravityMod > 1)
-                {
-                    bodyStatus = PlayerBodyStatus.Falling;
-                }
-            }
+            bodySprite.Animation = "Fall";
         }
+        GD.Print(bodyStatus);
     }
 
     public void SetPlayerBodyStatus2()
