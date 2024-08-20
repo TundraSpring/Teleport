@@ -389,17 +389,27 @@ public partial class Player : Node2D
         if (Input.IsActionJustPressed("jump") && body.IsOnFloor())
         {
             beganJumpThisFrame = true;
-
-
-
+            Vector2 direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
             if (bodyStatus == PlayerBodyStatus.Crouching && energy > 0)
             {
-                velocity.Y += -2100F * size;
-                UpdateEnergyOrb(-200);
+                if (direction.X == 0)
+                {
+                    velocity.Y += -2100F * size;
+                    UpdateEnergyOrb(-200);
+                    GD.Print("high jump");
+                }
+                else
+                {
+                    velocity.Y += -1000F * size;
+                    UpdateEnergyOrb(-200);
+                    GD.Print("long jump");
+                    bodyStatus = PlayerBodyStatus.Longjumping;
+                }
             }
             else
             {
                 velocity.Y += -1500F * size;
+                //velocity.Y += -1000F * size;
             }
         }
     }
@@ -488,9 +498,16 @@ public partial class Player : Node2D
 
         //move_up and move_down do not add velocity, they are there to make sure the code functions
         Vector2 direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
+
+        float longJumpMod = 1F;
+        if (bodyStatus == PlayerBodyStatus.Longjumping)
+        {
+            longJumpMod = 2F;
+        }
+
         if (direction != Vector2.Zero)
         {
-            velocity.X = direction.X * ((speed * size) * sneakMod);
+            velocity.X = direction.X * ((speed * size) * sneakMod * longJumpMod);
         }
         else
         {
@@ -655,6 +672,11 @@ public partial class Player : Node2D
 
     public void SetPlayerBodyStatus2()
     {
+        if (bodyStatus == PlayerBodyStatus.Longjumping && (beganJumpThisFrame || !body.IsOnFloor()))
+        {
+            return;
+        }
+
         bool isCrouched = false;
         CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
         if (bodyCollision.Position.Y == 0F)
