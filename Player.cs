@@ -22,7 +22,7 @@ public partial class Player : Node2D
     //public bool isCrouched = false;
     //public bool tryingToUncrouch = false;
     //public float prevUncrouchMod = 0;
-    //public bool beganJumpThisFrame = false;
+    public bool beganJumpThisFrame = false;
     //public bool crouchCollisionSinceLastCheck = false;
     public int fastFallInputTimer = -1;
     //public bool slam = false;
@@ -58,7 +58,7 @@ public partial class Player : Node2D
         RestoreEnergy();
         MoveBody(delta);
         SetSoulPosition(delta);
-        //beganJumpThisFrame = false;
+        
         
         if (Input.IsActionJustPressed("mouse1"))
         {
@@ -96,6 +96,16 @@ public partial class Player : Node2D
         //{
         //    slam = false;
         //}
+
+        //beganJumpThisFrame = false;
+        if (bodyStatus == PlayerBodyStatus.CrouchingCramped)
+        {
+            beganJumpThisFrame = true;
+        }
+        else
+        {
+            beganJumpThisFrame = false;
+        }
     }
 
     public override void _Process(double delta)
@@ -130,21 +140,6 @@ public partial class Player : Node2D
         else if (Input.IsActionJustPressed("interact"))
         {
             EmitSignal(SignalName.Interact);
-        }
-        else if (Input.IsActionJustPressed("sneak"))
-        {
-            hasMoved = false;
-            ToggleCrouchMode3();
-        }
-        else if (Input.IsActionJustReleased("sneak"))
-        {
-            ToggleCrouchMode3();
-            if (hasMoved == false)
-            {
-                body.Position = new Vector2(body.Position.X, body.Position.Y + 1);
-                body.MoveAndSlide();
-                hasMoved = true;
-            }
         }
     }
 
@@ -317,6 +312,8 @@ public partial class Player : Node2D
         bool onGroundAfter = body.IsOnFloor();
         if (onGroundBefore != onGroundAfter)
         {
+            GD.Print(onGroundBefore);
+            GD.Print(onGroundAfter);
             ToggleCrouchMode3();
         }
     }
@@ -391,6 +388,10 @@ public partial class Player : Node2D
     {
         if (Input.IsActionJustPressed("jump") && body.IsOnFloor())
         {
+            beganJumpThisFrame = true;
+
+
+
             if (bodyStatus == PlayerBodyStatus.Crouching && energy > 0)
             {
                 velocity.Y += -2100F * size;
@@ -418,7 +419,7 @@ public partial class Player : Node2D
         }
         else if (Input.IsActionPressed("jump") && (velocity.Y >= 0))
         {
-            if (canGlide && energy >= 2)
+            if (canGlide && energy >= 2 && bodyStatus != PlayerBodyStatus.Crouching && bodyStatus != PlayerBodyStatus.CrouchingCramped)
             {
                 return 1F;
             }
@@ -454,9 +455,28 @@ public partial class Player : Node2D
 
     public void MoveBodyHorizontally(ref Vector2 velocity)
     {
+        if (Input.IsActionJustPressed("sneak"))
+        {
+            hasMoved = false;
+            ToggleCrouchMode3();
+        }
+        else if (Input.IsActionJustReleased("sneak"))
+        {
+            ToggleCrouchMode3();
+            if (hasMoved == false)
+            {
+                body.Position = new Vector2(body.Position.X, body.Position.Y + 1);
+                body.MoveAndSlide();
+                hasMoved = true;
+            }
+        }
+
+
         if ((bodyStatus == PlayerBodyStatus.Crouching || bodyStatus == PlayerBodyStatus.CrouchingCramped) && !Input.IsActionPressed("sneak"))
         {
-            TryToUncrouch3();
+            //GD.Print("Try to uncrouch 1");
+            //TryToUncrouch3();
+            ToggleCrouchMode3();
         }
 
 
@@ -498,6 +518,7 @@ public partial class Player : Node2D
 
         if (!isCrouched && crouchNow && body.IsOnFloor())
         {
+            GD.Print("crouch");
             bodySprite.Position = new Vector2(bodySprite.Position.X, -10F * size);
             bodyCollision.Position = new Vector2(bodySprite.Position.X, 0F);
             bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 0.68F * size);
@@ -507,6 +528,7 @@ public partial class Player : Node2D
         }
         else if (isCrouched && !crouchNow && body.IsOnFloor() || isCrouched && !body.IsOnFloor())
         {
+            GD.Print("uncrouch");
             TryToUncrouch3();
         }
         else if (crouchNow)
@@ -518,8 +540,8 @@ public partial class Player : Node2D
 
     public void TryToUncrouch3()
     {
-        if (!Input.IsActionPressed("sneak"))
-        {
+        //if (!Input.IsActionPressed("sneak"))
+        //{
             //Make the "check for crouch scout collision" part it's own method later
             CharacterBody2D crouchScout = GetNode<CharacterBody2D>("PlayerBody/PlayerBodyCrouch");
             KinematicCollision2D collision = crouchScout.MoveAndCollide(new Vector2(0, 0));
@@ -537,7 +559,7 @@ public partial class Player : Node2D
                 body.Position = new Vector2(body.Position.X, body.Position.Y - 30F * size);
                 camera.Position = new Vector2(0, 0);
             }
-        }
+        //}
     }
 
 
@@ -627,31 +649,33 @@ public partial class Player : Node2D
         {
             bodySprite.Animation = "Fall";
         }
-        GD.Print(bodyStatus);
+        //GD.Print(bodyStatus);
+        //GD.Print(prevGravityMod);
     }
 
     public void SetPlayerBodyStatus2()
     {
-        bool crouching = false;
-        if (Input.IsActionPressed("sneak"))
+        bool isCrouched = false;
+        CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
+        if (bodyCollision.Position.Y == 0F)
+        {
+            isCrouched = true;
+        }
+        if (isCrouched)
         {
             CharacterBody2D crouchScout = GetNode<CharacterBody2D>("PlayerBody/PlayerBodyCrouch");
             KinematicCollision2D collision = crouchScout.MoveAndCollide(new Vector2(0, 0));
             crouchScout.Position = new Vector2(0, -47);
 
-            if (collision != null)
+            if (collision != null && (beganJumpThisFrame || body.IsOnFloor()))
             {
                 bodyStatus = PlayerBodyStatus.CrouchingCramped;
                 return;
             }
-            else
-            {
-                crouching = true;
-            }
         }
         if (body.IsOnFloor())
         {
-            if (!crouching)
+            if (!isCrouched)
             {
                 if (body.Velocity.X != 0)
                 {
@@ -669,7 +693,11 @@ public partial class Player : Node2D
         }
         else
         {
-            if (body.Velocity.Y < 0)
+            if (prevGravityMod > 7)
+            {
+                bodyStatus = PlayerBodyStatus.FastFalling;
+            }
+            else if (body.Velocity.Y < 0)
             {
                 if (body.Velocity.Y < -1500)
                 {
@@ -686,10 +714,6 @@ public partial class Player : Node2D
                 if (prevGravityMod == 1)
                 {
                     bodyStatus = PlayerBodyStatus.Gliding;
-                }
-                else if (prevGravityMod > 7)
-                {
-                    bodyStatus = PlayerBodyStatus.FastFalling;
                 }
                 else if (prevGravityMod > 1)
                 {

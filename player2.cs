@@ -1022,7 +1022,29 @@ public partial class player2 : Area2D
         //    }
         //}
 
-
+        //public void SetBodySpriteImage(Vector2 velocity, AnimatedSprite2D bodySprite)
+        //{
+        //    //if (body.IsOnFloor() && !isCrouched)
+        //    //{
+        //    //    bodySprite.Animation = "Walk";
+        //    //}
+        //    //else if ((body.IsOnFloor() && isCrouched) || (crouchCollisionSinceLastCheck && beganJumpThisFrame))
+        //    //{
+        //    //    bodySprite.Animation = "Crouch";
+        //    //}
+        //    //else if (body.GlobalPosition.Y > velocity.Y)
+        //    //{
+        //    //    bodySprite.Animation = "Jump";
+        //    //}
+        //    //else if (body.GlobalPosition.Y < velocity.Y && prevGravityMod == 1)
+        //    //{
+        //    //    bodySprite.Animation = "Glide";
+        //    //}
+        //    //else if (body.GlobalPosition.Y < velocity.Y && (prevGravityMod == 7 || prevGravityMod == 6))
+        //    //{
+        //    //    bodySprite.Animation = "Fall";
+        //    //}
+        //}
 
 
 
