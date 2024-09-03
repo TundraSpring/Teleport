@@ -2,7 +2,7 @@ using Godot;
 using System;
 using Teleport;
 
-public partial class Dygnflower : Area2D
+public partial class Dygnflower : Area2D, IGameObject
 {
 	public string id;
 	public int channel;
@@ -40,6 +40,7 @@ public partial class Dygnflower : Area2D
 	{
         status = newStatus;
         AnimatedSprite2D sprite = GetNode<AnimatedSprite2D>("DygnflowerAnimation");
+
 		if (newStatus == DygnflowerStatus.Sleeping)
 		{
             if (type == DygnflowerType.Night)
@@ -98,8 +99,9 @@ public partial class Dygnflower : Area2D
         }
     }
 
-    public void OnBodyEntered(Node2D node2D)
+    public void OnBodyEnteredOLD(Node2D node2D)
     {
+
             if (status == DygnflowerStatus.Sleeping)
             {
                 SetStatus(DygnflowerStatus.Pending);
@@ -110,5 +112,24 @@ public partial class Dygnflower : Area2D
                 SetStatus(DygnflowerStatus.Ready);
                 EmitSignal(SignalName.SetTeleport, teleportDestination);
             }
+    }
+
+
+
+    public void OnBodyEntered(Node2D node2D)
+    {
+        if ((node2D.Name == "PlayerSoul" || node2D.Name == "PlayerBody"))
+        {
+            try
+            {
+                Room parent = (Room)GetParent();
+                Player player = Global.Instance.GetPlayer();
+                parent.RoomObjectEvent(player, node2D, ObjectEvent.HitboxEntered, this, this);
+            }
+            catch
+            {
+                GD.Print("ERROR: Dygnflower tried to send signal to non-existent room");
+            }
+        }
     }
 }

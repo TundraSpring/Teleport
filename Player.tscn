@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://c0jj1bwa6ykwc"]
+[gd_scene load_steps=31 format=3 uid="uid://c0jj1bwa6ykwc"]
 
 [ext_resource type="Script" path="res://Player.cs" id="1_x1iux"]
 [ext_resource type="Texture2D" uid="uid://6ph6sfpl0ako" path="res://art/playerSoul.png" id="2_o26uv"]
@@ -6,12 +6,17 @@
 [ext_resource type="Texture2D" uid="uid://blu2t7m7nm3gy" path="res://art/draongFall.png" id="3_u2gwd"]
 [ext_resource type="Texture2D" uid="uid://lqtm721cx1xt" path="res://art/dragonGlide.png" id="4_ea3ka"]
 [ext_resource type="Texture2D" uid="uid://dvmv2uedp5gy8" path="res://art/dragonJump.png" id="5_0xcvc"]
+[ext_resource type="Texture2D" uid="uid://dhn7xqll6fpm7" path="res://art/dragonFastfall.png" id="5_5dptr"]
 [ext_resource type="Texture2D" uid="uid://byvrsvn5joog1" path="res://art/dragonWalk.png" id="6_kkvd2"]
-[ext_resource type="Texture2D" uid="uid://bppsdbv1d8g0l" path="res://art/maroHalo.png" id="7_0w20r"]
 [ext_resource type="Texture2D" uid="uid://cokg8pdynqt67" path="res://art/maroHalo3.png" id="7_3cjpp"]
+[ext_resource type="Texture2D" uid="uid://xsvbfuq78tem" path="res://art/dragonLongjump.png" id="7_p6qqm"]
+[ext_resource type="Texture2D" uid="uid://snwi33r7ulq0" path="res://art/dragonHighjump.png" id="7_qn4wv"]
 [ext_resource type="Texture2D" uid="uid://bfsrdbtpk51lf" path="res://art/playerOrbPurple.png" id="8_mse7n"]
 [ext_resource type="Texture2D" uid="uid://b63ubc6fjyolp" path="res://art/femboy.png" id="9_816nd"]
 [ext_resource type="Texture2D" uid="uid://6xtovhi2710w" path="res://art/playerOrbCyan.png" id="10_ovm1g"]
+[ext_resource type="Texture2D" uid="uid://bn88b8exn8ggb" path="res://art/empty.png" id="14_0trq7"]
+[ext_resource type="Texture2D" uid="uid://dm2b4fy8v5gu4" path="res://art/boxMaro.png" id="14_81m8f"]
+[ext_resource type="Texture2D" uid="uid://681peottnce2" path="res://art/playerSquareCyan.png" id="16_pc1po"]
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_isove"]
 a = Vector2(-0.0112305, -31)
@@ -48,6 +53,14 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": ExtResource("5_5dptr")
+}],
+"loop": true,
+"name": &"Fastfall",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": ExtResource("4_ea3ka")
 }],
 "loop": true,
@@ -56,10 +69,26 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": ExtResource("7_qn4wv")
+}],
+"loop": true,
+"name": &"Highjump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": ExtResource("5_0xcvc")
 }],
 "loop": true,
 "name": &"Jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_p6qqm")
+}],
+"loop": true,
+"name": &"Longjump",
 "speed": 5.0
 }, {
 "frames": [{
@@ -106,7 +135,15 @@ animations = [{
 "texture": ExtResource("9_816nd")
 }],
 "loop": true,
-"name": &"Float",
+"name": &"Default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_0trq7")
+}],
+"loop": true,
+"name": &"Square",
 "speed": 5.0
 }]
 
@@ -117,12 +154,19 @@ animations = [{
 "texture": ExtResource("7_3cjpp")
 }],
 "loop": true,
-"name": &"Float",
+"name": &"Default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_81m8f")
+}],
+"loop": true,
+"name": &"Square",
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_48scf"]
-radius = 32.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_mhtbq"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_8yyt6"]
 animations = [{
@@ -131,7 +175,15 @@ animations = [{
 "texture": ExtResource("10_ovm1g")
 }],
 "loop": true,
-"name": &"default",
+"name": &"Default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("16_pc1po")
+}],
+"loop": true,
+"name": &"Square",
 "speed": 5.0
 }]
 
@@ -139,10 +191,18 @@ animations = [{
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("7_0w20r")
+"texture": ExtResource("7_3cjpp")
 }],
 "loop": true,
-"name": &"default",
+"name": &"Default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_81m8f")
+}],
+"loop": true,
+"name": &"Square",
 "speed": 5.0
 }]
 
@@ -170,8 +230,8 @@ scale = Vector2(0.0176665, 0.707)
 sprite_frames = SubResource("SpriteFrames_ay4r3")
 
 [node name="PlayerBody" type="CharacterBody2D" parent="."]
-collision_layer = 17
-collision_mask = 17
+collision_layer = 273
+collision_mask = 273
 
 [node name="PlayerBodySprite" type="AnimatedSprite2D" parent="PlayerBody"]
 scale = Vector2(4, 4)
@@ -206,28 +266,30 @@ shape = SubResource("RectangleShape2D_womuk")
 
 [node name="PlayerSoul" type="CharacterBody2D" parent="."]
 z_index = 1
-collision_layer = 34
-collision_mask = 34
+collision_layer = 290
+collision_mask = 290
 
 [node name="PlayerSoulSprite" type="AnimatedSprite2D" parent="PlayerSoul"]
 modulate = Color(1, 1, 1, 0.498039)
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_f5xur")
-animation = &"Float"
+animation = &"Square"
 
 [node name="PlayerSoulVisual" type="AnimatedSprite2D" parent="PlayerSoul"]
 modulate = Color(1, 1, 1, 0.498039)
 scale = Vector2(0.16, 0.16)
 sprite_frames = SubResource("SpriteFrames_wyrfk")
-animation = &"Float"
+animation = &"Default"
 
 [node name="PlayerSoulCollision" type="CollisionShape2D" parent="PlayerSoul"]
-shape = SubResource("CircleShape2D_48scf")
+scale = Vector2(3.2, 3.2)
+shape = SubResource("CircleShape2D_mhtbq")
 
 [node name="PlayerSoulEnergy" type="AnimatedSprite2D" parent="PlayerSoul"]
 modulate = Color(1, 1, 1, 0.74902)
 scale = Vector2(0.16, 0.16)
 sprite_frames = SubResource("SpriteFrames_8yyt6")
+animation = &"Default"
 
 [node name="PlayerScout" type="CharacterBody2D" parent="."]
 collision_layer = 8
@@ -236,6 +298,7 @@ collision_mask = 8
 [node name="PlayerScoutVisual" type="AnimatedSprite2D" parent="PlayerScout"]
 scale = Vector2(0.16, 0.16)
 sprite_frames = SubResource("SpriteFrames_3o13o")
+animation = &"Default"
 
 [node name="PlayerScoutCollision" type="CollisionShape2D" parent="PlayerScout"]
 shape = SubResource("CircleShape2D_ueeom")

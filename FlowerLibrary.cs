@@ -50,17 +50,6 @@ namespace Teleport
         //    return flowerLibrary[channel];
         //}
 
-        public override void _Ready()
-        {
-            Dygnflower dygnflower1 = new Dygnflower();
-            Dygnflower dygnflower2 = new Dygnflower();
 
-            dygnflower1.SetData("A01-R01-F01", 1, DygnflowerStatus.Sleeping, DygnflowerType.Night, new Vector2(-9452, -16), false);
-            dygnflower2.SetData("A01-R01-F02", 1, DygnflowerStatus.Sleeping, DygnflowerType.Night, new Vector2(-1180, -99), false);
-
-            List<Dygnflower> dygnflowers1 = new List<Dygnflower> { dygnflower1, dygnflower2 };
-
-            library.Add(1, dygnflowers1);
-        }
     }
 }

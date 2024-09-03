@@ -89,7 +89,7 @@ script = ExtResource("1_ojt8a")
 [node name="DygnflowerAnimation" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -18.5)
 sprite_frames = SubResource("SpriteFrames_wxnlb")
-animation = &"ReadyNight"
+animation = &"ReadyDay"
 
 [node name="DygnflowerCollision" type="CollisionShape2D" parent="."]
 position = Vector2(0, -25.3333)

@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://ygdqayw6kjyo"]
+[gd_scene load_steps=7 format=3 uid="uid://ygdqayw6kjyo"]
 
 [ext_resource type="PackedScene" uid="uid://cfy5lq3t65d07" path="res://platform.tscn" id="1_gvn7n"]
 [ext_resource type="PackedScene" uid="uid://cxb5f1hm4fk0q" path="res://squareffb17c.tscn" id="1_rixg4"]
 [ext_resource type="PackedScene" uid="uid://c0jj1bwa6ykwc" path="res://Player.tscn" id="2_bp3bj"]
 [ext_resource type="PackedScene" uid="uid://bfxwryp4sac1p" path="res://darkGreySquare.tscn" id="2_rr6lj"]
-[ext_resource type="PackedScene" uid="uid://ckbadyfts3p7m" path="res://platformBar.tscn" id="3_ruxg6"]
+[ext_resource type="PackedScene" uid="uid://ckbadyfts3p7m" path="res://PlatformBar.tscn" id="3_ruxg6"]
+[ext_resource type="PackedScene" uid="uid://cyh44f25wf0lm" path="res://pilgrim.tscn" id="6_skjsn"]
 
 [node name="Area2" type="Node2D"]
 
@@ -216,3 +217,6 @@ scale = Vector2(18, 5)
 [node name="StaticBody2D8" parent="." instance=ExtResource("3_ruxg6")]
 position = Vector2(-3204, -2005)
 scale = Vector2(18, 5)
+
+[node name="Pilgrim" parent="." instance=ExtResource("6_skjsn")]
+position = Vector2(-319, -230)

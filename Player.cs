@@ -10,7 +10,7 @@ using System.IO;
 using static Godot.OpenXRHand;
 using GodotPlugins.Game;
 
-public partial class Player : Node2D
+public partial class Player : Node2D, IGameObject
 {
     public float speed = 800; // How fast the player will move (pixels/sec).
     //public float JumpVelocity = -1500F;
@@ -26,6 +26,8 @@ public partial class Player : Node2D
     //public bool crouchCollisionSinceLastCheck = false;
     public int fastFallInputTimer = -1;
     //public bool slam = false;
+    public float? longJumpDir;
+
 
     public double energy = 400;
     public double maxEnergy = 400;
@@ -33,6 +35,8 @@ public partial class Player : Node2D
     public double maxHealth = 100;
     public PlayerMode playerMode;
     public PlayerBodyStatus bodyStatus;
+    public PlayerSoulStatus soulStatus = PlayerSoulStatus.Default;
+    public int teleportInputTimer = 0;
     public bool canGlide = true;
 
     public CharacterBody2D body;
@@ -46,11 +50,66 @@ public partial class Player : Node2D
     public override void _Ready()
 	{
         SetPlayerMode(PlayerMode.Body);
+       
         SetSize(1F);
+        
+
         body = GetNode<CharacterBody2D>("PlayerBody");
         soul = GetNode<CharacterBody2D>("PlayerSoul");
         tether = GetNode<CharacterBody2D>("PlayerTether");
         scout = GetNode<CharacterBody2D>("PlayerScout");
+
+        SetSoulStatus(PlayerSoulStatus.Default);
+    }
+
+    public void SetSoulStatus(PlayerSoulStatus newSoulStatus)
+    {
+        if (newSoulStatus == PlayerSoulStatus.Box)
+        {
+            soul.CollisionLayer = 290;
+            soul.CollisionMask = 290;
+
+            AnimatedSprite2D soulSprite = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulSprite");
+            AnimatedSprite2D soulVisual = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulVisual");
+            CollisionShape2D soulCollision = GetNode<CollisionShape2D>("PlayerSoul/PlayerSoulCollision");
+            AnimatedSprite2D soulEnergy = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulEnergy");
+            soulSprite.Animation = "Square";
+            soulVisual.Animation = "Square";
+            soulCollision.Shape = new RectangleShape2D();
+            soulCollision.Scale = new Vector2(3.2F, 3.2F);
+            soulEnergy.Animation = "Square";
+
+            AnimatedSprite2D scoutVisual = GetNode<AnimatedSprite2D>("PlayerScout/PlayerScoutVisual");
+            CollisionShape2D scoutCollision = GetNode<CollisionShape2D>("PlayerScout/PlayerScoutCollision");
+            scoutVisual.Animation = "Square";
+            scoutCollision.Shape = new CircleShape2D();
+            scoutCollision.Scale = new Vector2(3.2F, 3.2F);
+
+            soulStatus = PlayerSoulStatus.Box;
+        }
+        else if (newSoulStatus == PlayerSoulStatus.Default)
+        {
+            soul.CollisionLayer = 34;
+            soul.CollisionMask = 34;
+
+            AnimatedSprite2D soulSprite = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulSprite");
+            AnimatedSprite2D soulVisual = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulVisual");
+            CollisionShape2D soulCollision = GetNode<CollisionShape2D>("PlayerSoul/PlayerSoulCollision");
+            AnimatedSprite2D soulEnergy = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulEnergy");
+            soulSprite.Animation = "Default";
+            soulVisual.Animation = "Default";
+            soulCollision.Shape = new CircleShape2D();
+            soulCollision.Scale = new Vector2(3.2F, 3.2F);
+            soulEnergy.Animation = "Default";
+
+            AnimatedSprite2D scoutVisual = GetNode<AnimatedSprite2D>("PlayerScout/PlayerScoutVisual");
+            CollisionShape2D scoutCollision = GetNode<CollisionShape2D>("PlayerScout/PlayerScoutCollision");
+            scoutVisual.Animation = "Default";
+            scoutCollision.Shape = new CircleShape2D();
+            scoutCollision.Scale = new Vector2(3.2F, 3.2F);
+
+            soulStatus = PlayerSoulStatus.Default;
+        }
     }
 
     public override void _PhysicsProcess(double delta)
@@ -58,46 +117,8 @@ public partial class Player : Node2D
         RestoreEnergy();
         MoveBody(delta);
         SetSoulPosition(delta);
-        
-        
-        if (Input.IsActionJustPressed("mouse1"))
-        {
-            //var scene = GD.Load<PackedScene>("res://Projectile.tscn");
-            //Projectile instance = (Projectile)scene.Instantiate();
-            //instance.Boo();
-            //var scene2 = ResourceLoader.Load<PackedScene>("res://Projectile.cs").Instantiate();
+        DoAttack();
 
-            PackedScene Projectiles = GD.Load<PackedScene>("res://projectile.tscn");
-            Projectile projectile = (Projectile)Projectiles.Instantiate();
-            projectile.GlobalPosition = body.GlobalPosition;
-            Node node = GetParent(); //Start
-            //node.AddChild(projectile);
-            body.AddChild(projectile);
-            projectile.GlobalPosition = body.GlobalPosition;
-            AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
-            if (Input.IsActionPressed("up"))
-            {
-                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X, projectile.GlobalPosition.Y - 100);
-            }
-            else if (bodySprite.FlipH)
-            {
-                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X - 100, projectile.GlobalPosition.Y);
-            }
-            else
-            {
-                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X + 100, projectile.GlobalPosition.Y);
-            }
-
-
-
-            //node.CallDeferred("node.AddChild()", projectile);
-        }
-        //if (body.IsOnFloor())
-        //{
-        //    slam = false;
-        //}
-
-        //beganJumpThisFrame = false;
         if (bodyStatus == PlayerBodyStatus.CrouchingCramped)
         {
             beganJumpThisFrame = true;
@@ -105,6 +126,53 @@ public partial class Player : Node2D
         else
         {
             beganJumpThisFrame = false;
+        }
+    }
+
+    public void DoAttack()
+    {
+        if (Input.IsActionJustPressed("mouse1"))
+        {
+            if (playerMode == PlayerMode.Body)
+            {
+                //var scene = GD.Load<PackedScene>("res://Projectile.tscn");
+                //Projectile instance = (Projectile)scene.Instantiate();
+                //instance.Boo();
+                //var scene2 = ResourceLoader.Load<PackedScene>("res://Projectile.cs").Instantiate();
+
+                PackedScene Projectiles = GD.Load<PackedScene>("res://projectile.tscn");
+                Projectile projectile = (Projectile)Projectiles.Instantiate();
+                projectile.GlobalPosition = body.GlobalPosition;
+                Node node = GetParent(); //Start
+                                         //node.AddChild(projectile);
+                body.AddChild(projectile);
+                projectile.GlobalPosition = body.GlobalPosition;
+                AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
+                if (Input.IsActionPressed("up"))
+                {
+                    projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X, projectile.GlobalPosition.Y - 100);
+                }
+                else if (bodySprite.FlipH)
+                {
+                    projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X - 100, projectile.GlobalPosition.Y);
+                }
+                else
+                {
+                    projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X + 100, projectile.GlobalPosition.Y);
+                }
+            }
+            else
+            {
+                if (body.Visible == true)
+                {
+                    body.Visible = false;
+                }
+                else
+                {
+                    body.Visible = true;
+                }
+                
+            }
         }
     }
 
@@ -120,13 +188,8 @@ public partial class Player : Node2D
 
     public override void _Input(InputEvent @event)
     {
-        if (Input.IsActionJustPressed("teleport") && energy >= 1)
-        {
-            Teleport(soul.Position);
-            UpdateEnergyOrb(-200);
-            UpdateHealthOrb(-5);
-        }
-        else if (Input.IsActionJustPressed("switch_player_mode"))
+
+        if (Input.IsActionJustPressed("switch_player_mode"))
         {
             if (playerMode == PlayerMode.Body)
             {
@@ -212,7 +275,7 @@ public partial class Player : Node2D
 
     public void RestoreEnergy()
     {
-        if (body.IsOnFloor())
+        if (body.IsOnFloor() && soulStatus != PlayerSoulStatus.Box)
         {
             UpdateEnergyOrb(2);
         }
@@ -269,21 +332,6 @@ public partial class Player : Node2D
         {
             double newSize = 0.16F * (energy / maxEnergy) * size;
             soulEnergy.Scale = new Vector2((float)newSize, (float)newSize);
-
-            
-            //double energyPercent = energy / maxEnergy;
-            //GD.Print("energyPercent ", energyPercent);
-            //double radiusSquared = energyPercent / Math.PI;
-            //GD.Print("radiusSquared ", radiusSquared);
-            //double radius = Math.Sqrt(radiusSquared);
-            //GD.Print("radius ", radius);
-            //double newSize = radius * 0.28F; //* 0.02835926161448825643677067973346F;
-            //GD.Print("newSize ", newSize);
-            //soulEnergy.Scale = new Vector2((float)newSize, (float)newSize);
-
-
-
-
         }
         else
         {
@@ -298,6 +346,7 @@ public partial class Player : Node2D
         Vector2 velocity = body.Velocity;
         MoveBodyVertically(ref velocity);
         MoveBodyHorizontally(ref velocity);
+        CheckForTeleport();
         SetPlayerBodyStatus2();
         SetBodySprite(velocity);
 
@@ -312,9 +361,49 @@ public partial class Player : Node2D
         bool onGroundAfter = body.IsOnFloor();
         if (onGroundBefore != onGroundAfter)
         {
-            GD.Print(onGroundBefore);
-            GD.Print(onGroundAfter);
             ToggleCrouchMode3();
+        }
+    }
+
+    public void CheckForTeleport()
+    {
+        if (Input.IsActionPressed("teleport"))
+        {
+            teleportInputTimer++;
+
+            if (energy >= 0 && teleportInputTimer >= 20)
+            {
+
+                UpdateEnergyOrb(-2);
+            }
+
+            
+            if (teleportInputTimer >= 20 && energy >= 50 && soulStatus != PlayerSoulStatus.Box)
+            {
+                SetSoulStatus(PlayerSoulStatus.Box);
+            }
+            if (soulStatus == PlayerSoulStatus.Box)
+            {
+                
+                if (energy <= 0)
+                {
+                    SetSoulStatus(PlayerSoulStatus.Default);
+                }
+            }
+        }
+        if (Input.IsActionJustReleased("teleport"))
+        {
+            if (teleportInputTimer < 10 && energy >= 1)
+            {
+                Teleport(soul.Position);
+                UpdateEnergyOrb(-200);
+                UpdateHealthOrb(-5);
+            }
+            else if (soulStatus == PlayerSoulStatus.Box)
+            {
+                SetSoulStatus(PlayerSoulStatus.Default);
+            }
+            teleportInputTimer = 0;
         }
     }
 
@@ -396,14 +485,13 @@ public partial class Player : Node2D
                 {
                     velocity.Y += -2100F * size;
                     UpdateEnergyOrb(-200);
-                    GD.Print("high jump");
                 }
                 else
                 {
-                    velocity.Y += -1000F * size;
+                    velocity.Y += -700F * size;
                     UpdateEnergyOrb(-200);
-                    GD.Print("long jump");
                     bodyStatus = PlayerBodyStatus.Longjumping;
+                    longJumpDir = direction.X;
                 }
             }
             else
@@ -429,7 +517,7 @@ public partial class Player : Node2D
         }
         else if (Input.IsActionPressed("jump") && (velocity.Y >= 0))
         {
-            if (canGlide && energy >= 2 && bodyStatus != PlayerBodyStatus.Crouching && bodyStatus != PlayerBodyStatus.CrouchingCramped)
+            if (canGlide && energy >= 2 && bodyStatus != PlayerBodyStatus.Crouching && bodyStatus != PlayerBodyStatus.CrouchingCramped && bodyStatus != PlayerBodyStatus.Longjumping)
             {
                 return 1F;
             }
@@ -477,6 +565,7 @@ public partial class Player : Node2D
             {
                 body.Position = new Vector2(body.Position.X, body.Position.Y + 1);
                 body.MoveAndSlide();
+                fastFallInputTimer = 30;
                 hasMoved = true;
             }
         }
@@ -484,8 +573,6 @@ public partial class Player : Node2D
 
         if ((bodyStatus == PlayerBodyStatus.Crouching || bodyStatus == PlayerBodyStatus.CrouchingCramped) && !Input.IsActionPressed("sneak"))
         {
-            //GD.Print("Try to uncrouch 1");
-            //TryToUncrouch3();
             ToggleCrouchMode3();
         }
 
@@ -498,16 +585,23 @@ public partial class Player : Node2D
 
         //move_up and move_down do not add velocity, they are there to make sure the code functions
         Vector2 direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
-
-        float longJumpMod = 1F;
         if (bodyStatus == PlayerBodyStatus.Longjumping)
         {
-            longJumpMod = 2F;
+            sneakMod = 2.75F;
+            if (longJumpDir is not null)
+            {
+                if (longJumpDir != direction.X)
+                {
+                    longJumpDir = null;
+                    sneakMod = 1F;
+                }
+            }
         }
+        
 
         if (direction != Vector2.Zero)
         {
-            velocity.X = direction.X * ((speed * size) * sneakMod * longJumpMod);
+            velocity.X = direction.X * ((speed * size) * sneakMod);
         }
         else
         {
@@ -535,7 +629,6 @@ public partial class Player : Node2D
 
         if (!isCrouched && crouchNow && body.IsOnFloor())
         {
-            GD.Print("crouch");
             bodySprite.Position = new Vector2(bodySprite.Position.X, -10F * size);
             bodyCollision.Position = new Vector2(bodySprite.Position.X, 0F);
             bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 0.68F * size);
@@ -545,7 +638,6 @@ public partial class Player : Node2D
         }
         else if (isCrouched && !crouchNow && body.IsOnFloor() || isCrouched && !body.IsOnFloor())
         {
-            GD.Print("uncrouch");
             TryToUncrouch3();
         }
         else if (crouchNow)
@@ -648,11 +740,11 @@ public partial class Player : Node2D
         }
         else if (bodyStatus == PlayerBodyStatus.HighJumping)
         {
-            bodySprite.Animation = "Jump";
+            bodySprite.Animation = "Highjump";
         }
         else if (bodyStatus == PlayerBodyStatus.Longjumping)
         {
-            bodySprite.Animation = "Jump";
+            bodySprite.Animation = "Longjump";
         }
         else if (bodyStatus == PlayerBodyStatus.Falling)
         {
@@ -664,18 +756,17 @@ public partial class Player : Node2D
         }
         else // (bodyStatus == PlayerBodyStatus.FastFalling)
         {
-            bodySprite.Animation = "Fall";
+            bodySprite.Animation = "Fastfall";
         }
-        //GD.Print(bodyStatus);
-        //GD.Print(prevGravityMod);
     }
 
     public void SetPlayerBodyStatus2()
     {
-        if (bodyStatus == PlayerBodyStatus.Longjumping && (beganJumpThisFrame || !body.IsOnFloor()))
+        if (bodyStatus == PlayerBodyStatus.Longjumping && (beganJumpThisFrame || !body.IsOnFloor()) && longJumpDir is not null)
         {
             return;
         }
+        longJumpDir = null;
 
         bool isCrouched = false;
         CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
@@ -747,21 +838,24 @@ public partial class Player : Node2D
 
     public void SetSoulPosition(double delta)
     {
-        PreventIllegalSoulDistance();
-        Vector2 desiredPos = GetCursorPos() + body.Position;
-        SetTether(desiredPos);
-
-        scout.Position = soul.Position;
-        KinematicCollision2D collision = scout.MoveAndCollide((desiredPos - soul.Position) * 1F);
-        if (collision != null)
+        if (soulStatus != PlayerSoulStatus.Box)
         {
-            DoAdditionalSoulMovements(collision);
+            PreventIllegalSoulDistance();
+            Vector2 desiredPos = GetCursorPos() + body.Position;
+            SetTether(desiredPos);
+
+            scout.Position = soul.Position;
+            KinematicCollision2D collision = scout.MoveAndCollide((desiredPos - soul.Position) * 1F);
+            if (collision != null)
+            {
+                DoAdditionalSoulMovements(collision);
+            }
+
+            soul.Position = scout.Position;
+            //soul.MoveAndSlide();
+
+            SetSoulSpriteDirection();
         }
-
-        soul.Position = scout.Position;
-        //soul.MoveAndSlide();
-
-        SetSoulSpriteDirection();
     }
 
     public void PreventIllegalSoulDistance()

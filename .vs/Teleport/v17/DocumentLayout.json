@@ -3,28 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\playerbodystatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:playerbodystatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\player2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:player2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\platform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:platform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\projectile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:projectile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\room.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:room.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\dygnflower.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:dygnflower.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\objectevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:objectevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\dygnflowerstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:dygnflowerstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\igameobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:igameobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\roompacket.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:roompacket.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\global.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -35,12 +35,12 @@
       "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:roombridge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\dygnflowertype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:dygnflowertype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\rblibrary.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:rblibrary.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\start.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:start.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -50,93 +50,85 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "PlayerBodyStatus.cs",
-              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\PlayerBodyStatus.cs",
-              "RelativeDocumentMoniker": "PlayerBodyStatus.cs",
-              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\PlayerBodyStatus.cs",
-              "RelativeToolTip": "PlayerBodyStatus.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAQAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-19T12:48:28.193Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Player.cs",
-              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Player.cs",
-              "RelativeDocumentMoniker": "Player.cs",
-              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Player.cs*",
-              "RelativeToolTip": "Player.cs*",
-              "ViewState": "AQIAAI0CAAAAAAAAAAAIwJcCAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-07T21:20:16.232Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "player2.cs",
-              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\player2.cs",
-              "RelativeDocumentMoniker": "player2.cs",
-              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\player2.cs",
-              "RelativeToolTip": "player2.cs",
-              "ViewState": "AQIAAKoDAAAAAAAAAAAAALwDAAAlAAAA",
+              "Title": "ObjectEvent.cs",
+              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\ObjectEvent.cs",
+              "RelativeDocumentMoniker": "ObjectEvent.cs",
+              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\ObjectEvent.cs",
+              "RelativeToolTip": "ObjectEvent.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAVAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-19T17:32:28.519Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Platform.cs",
-              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Platform.cs",
-              "RelativeDocumentMoniker": "Platform.cs",
-              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Platform.cs",
-              "RelativeToolTip": "Platform.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABwAAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-17T12:08:59.728Z"
+              "WhenOpened": "2024-08-31T14:11:43.251Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "Projectile.cs",
-              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Projectile.cs",
-              "RelativeDocumentMoniker": "Projectile.cs",
-              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Projectile.cs",
-              "RelativeToolTip": "Projectile.cs",
-              "ViewState": "AQIAAAsAAAAAAAAAAAAQwB8AAAAAAAAA",
+              "Title": "IGameObject.cs",
+              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\IGameObject.cs",
+              "RelativeDocumentMoniker": "IGameObject.cs",
+              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\IGameObject.cs",
+              "RelativeToolTip": "IGameObject.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-16T16:04:04.682Z"
+              "WhenOpened": "2024-08-30T16:53:36.043Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DygnflowerStatus.cs",
+              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\DygnflowerStatus.cs",
+              "RelativeDocumentMoniker": "DygnflowerStatus.cs",
+              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\DygnflowerStatus.cs",
+              "RelativeToolTip": "DygnflowerStatus.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-30T15:38:21.902Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Dygnflower.cs",
+              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Dygnflower.cs",
+              "RelativeDocumentMoniker": "Dygnflower.cs",
+              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Dygnflower.cs",
+              "RelativeToolTip": "Dygnflower.cs",
+              "ViewState": "AQIAAHkAAAAAAAAAAIAwwIUAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-30T14:50:32.979Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Player.cs",
+              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Player.cs",
+              "RelativeDocumentMoniker": "Player.cs",
+              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Player.cs",
+              "RelativeToolTip": "Player.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAACsAAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-30T11:41:45.426Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 9,
-              "Title": "RbLibrary.cs",
-              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\RbLibrary.cs",
-              "RelativeDocumentMoniker": "RbLibrary.cs",
-              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\RbLibrary.cs",
-              "RelativeToolTip": "RbLibrary.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAjwBkAAAAXAAAA",
+              "Title": "start.cs",
+              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\start.cs",
+              "RelativeDocumentMoniker": "start.cs",
+              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\start.cs",
+              "RelativeToolTip": "start.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAWAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-10T22:38:12.243Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Room.cs",
-              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Room.cs",
-              "RelativeDocumentMoniker": "Room.cs",
-              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Room.cs",
-              "RelativeToolTip": "Room.cs",
-              "ViewState": "AQIAAAkAAAAAAAAAAAAAAB0AAAAOAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-10T16:48:45.39Z"
+              "WhenOpened": "2024-08-29T10:11:38.554Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -146,9 +138,36 @@
               "RelativeDocumentMoniker": "RoomBridge.cs",
               "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\RoomBridge.cs",
               "RelativeToolTip": "RoomBridge.cs",
-              "ViewState": "AQIAAAUAAAAAAAAAAAAQwCAAAAAjAAAA",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAiwCIAAAAyAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-09T16:06:30.005Z"
+              "WhenOpened": "2024-08-29T09:50:28.095Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Room.cs",
+              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Room.cs",
+              "RelativeDocumentMoniker": "Room.cs",
+              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Room.cs",
+              "RelativeToolTip": "Room.cs",
+              "ViewState": "AQIAAJcAAAAAAAAAAAAowKcAAAAkAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-29T09:39:06.05Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "RoomPacket.cs",
+              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\RoomPacket.cs",
+              "RelativeDocumentMoniker": "RoomPacket.cs",
+              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\RoomPacket.cs",
+              "RelativeToolTip": "RoomPacket.cs",
+              "ViewState": "AQIAAAUAAAAAAAAAAAAqwCMAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-28T21:32:34.092Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -158,21 +177,10 @@
               "RelativeDocumentMoniker": "Global.cs",
               "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Global.cs",
               "RelativeToolTip": "Global.cs",
-              "ViewState": "AQIAABkAAAAAAAAAAAA6wBkAAAAUAAAA",
+              "ViewState": "AQIAAEwAAAAAAAAAAIA5wFwAAAAlAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-09T14:20:57.465Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "DygnflowerType.cs",
-              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\DygnflowerType.cs",
-              "RelativeDocumentMoniker": "DygnflowerType.cs",
-              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\DygnflowerType.cs",
-              "RelativeToolTip": "DygnflowerType.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-09T13:38:20.477Z"
+              "WhenOpened": "2024-08-09T14:20:57.465Z",
+              "EditorCaption": ""
             }
           ]
         }

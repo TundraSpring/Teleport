@@ -20,12 +20,6 @@ namespace Teleport
             _instance = this;
         }
 
-        public override void _Ready()
-        {
-            RoomBridge roomBridge = new RoomBridge();
-            roomBridge.SetData("res://area_2.tscn", "A01-R01-RB01", 1, 0, 0, new Vector4(0, 0, 0, 0), new Vector2(0, 0));
-            List<RoomBridge> roomBridges = new List<RoomBridge> { roomBridge };
-            library.Add(1, roomBridges);
-        }
+
     }
 }
