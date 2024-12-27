@@ -23,6 +23,7 @@ namespace Teleport
             GD.Print("fullId is now needed");
             RoomPacket rp = Global.Instance.GetRoomPacket(fullId);
             int spawnPos = Global.Instance.GetNewRoomSpawnPos();
+            Global.Instance.SetCurrentRoom(this);
 
             SetPlayer(rp, spawnPos);
             SetFlowers(rp.dygnflowers);
@@ -33,10 +34,7 @@ namespace Teleport
         // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(double delta)
         {
-            if (nextRoomDestination != "")
-            {
-                GetTree().ChangeSceneToFile(nextRoomDestination);
-            }
+
         }
 
 
@@ -73,7 +71,45 @@ namespace Teleport
             //GD.Print(playerNodeObj.Position);
         }
 
-        public void OnDygnflowerHit()
+        //public void OnDygnflowerHit()
+        //{
+        //    int nonSleepingCount = 0;
+        //    for (int i = 0; i < flowerObjects.Count; i++)
+        //    {
+        //        if (flowerObjects[i].status != DygnflowerStatus.Sleeping)
+        //        {
+        //            nonSleepingCount++;
+        //        }
+        //    }
+        //    if (nonSleepingCount == 2)
+        //    {
+        //        for (int i = 0; i < flowerObjects.Count; i++)
+        //        {
+        //            if (flowerObjects[i].status != DygnflowerStatus.Sleeping)
+        //            {
+        //                flowerObjects[i].SetStatus(DygnflowerStatus.Active);
+        //            }
+        //        }
+        //    }
+        //    Global.Instance.UpdateRoomLibrary(fullId, flowerObjects);
+        //}
+
+        //public void OnDygnflowerTeleportChange(Vector2 newTeleportDestination)
+        //{
+        //    if (newTeleportDestination != new Vector2(-9999999, -9999999))
+        //    {
+        //        currentTeleportDestinations.Add(newTeleportDestination);
+        //        flowersInProximity++;
+        //    }
+        //    else
+        //    {
+        //        currentTeleportDestinations.Add(null);
+        //        flowersInProximity--;
+        //    }
+        //    GD.Print(flowersInProximity);
+        //}
+
+        public void UpdateDygnflowers()
         {
             int nonSleepingCount = 0;
             for (int i = 0; i < flowerObjects.Count; i++)
@@ -94,21 +130,6 @@ namespace Teleport
                 }
             }
             Global.Instance.UpdateRoomLibrary(fullId, flowerObjects);
-        }
-
-        public void OnDygnflowerTeleportChange(Vector2 newTeleportDestination)
-        {
-            if (newTeleportDestination != new Vector2(-9999999, -9999999))
-            {
-                currentTeleportDestinations.Add(newTeleportDestination);
-                flowersInProximity++;
-            }
-            else
-            {
-                currentTeleportDestinations.Add(null);
-                flowersInProximity--;
-            }
-            GD.Print(flowersInProximity);
         }
 
         public void OnPlayerInteract()
@@ -137,10 +158,10 @@ namespace Teleport
             }
         }
 
-        public void OnRoomBridgeEntered()
-        {
-            nextRoomDestination = Global.Instance.GetNextDestinationScene();
-        }
+        //public void OnRoomBridgeEntered()
+        //{
+        //    nextRoomDestination = Global.Instance.GetNextDestinationScene();
+        //}
 
         public void RoomObjectEvent(Node eventOwner, Node eventTrigger, ObjectEvent eventType, Node objectTriggered, Node affectedObject)
         {
@@ -150,23 +171,43 @@ namespace Teleport
                 if (dfEntered.status == DygnflowerStatus.Sleeping)
                 {
                     dfEntered.SetStatus(DygnflowerStatus.Pending);
-                    OnDygnflowerHit();
+                    UpdateDygnflowers();
                 }
                 if (dfEntered.status == DygnflowerStatus.Active && eventTrigger.Name == "PlayerSoul")
                 {
                     dfEntered.SetStatus(DygnflowerStatus.Ready);
                     currentTeleportDestinations.Add(dfEntered.teleportDestination);
                     flowersInProximity++;
+                    GD.Print("entered." + flowersInProximity);
                 }
             }
-
             //Dygnflower becomes unreadied
             if (eventType == ObjectEvent.HitboxExited && objectTriggered is Dygnflower dfExited)
             {
                 dfExited.SetStatus(DygnflowerStatus.Active);
                 currentTeleportDestinations.Add(null);
                 flowersInProximity--;
+                GD.Print("left." + flowersInProximity);
             }
+            //Roombridge is activated
+            if (eventType == ObjectEvent.HitboxEntered && objectTriggered is RoomBridge rbEntered)
+            {
+                Global.Instance.SetNextDestination(rbEntered);
+            }
+            else if (eventType == ObjectEvent.AttackHit && objectTriggered is Platform platformEntered)
+            {
+                GD.Print("Yippee");
+            }
+            else
+            {
+                GD.Print(eventType);
+                GD.Print(objectTriggered.Name);
+                GD.Print(objectTriggered.GetType());
+                GD.Print("");
+            }
+
+
+
         }
     }
 }

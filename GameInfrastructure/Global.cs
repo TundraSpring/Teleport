@@ -1,9 +1,10 @@
-﻿using Godot;
+using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Teleport.GameObjects.Enums;
 
 namespace Teleport
 {
@@ -20,6 +21,7 @@ namespace Teleport
             _instance = this;
         }
 
+        Room currentRoom;
         RoomBridge nextRoom;
         Player player = new Player();
         //Dictionary<int, List<Dygnflower>> flowerLibrary = new Dictionary<int, List<Dygnflower>>();
@@ -57,6 +59,25 @@ namespace Teleport
             roomLibrary.Add("A01-R01", roomPacket);
 
             nextRoom = new("", 0);
+        }
+
+        // Called every frame. 'delta' is the elapsed time since the previous frame.
+        public override void _Process(double delta)
+        {
+            if (nextRoom.nextDestinationScene != "")
+            {
+                GetTree().ChangeSceneToFile(nextRoom.nextDestinationScene);
+            }
+        }
+
+        public void SetCurrentRoom(Room newRoom)
+        {
+            currentRoom = newRoom;
+        }
+
+        public Room GetCurrentRoom()
+        {
+            return currentRoom;
         }
 
         public string GetNextDestinationScene()

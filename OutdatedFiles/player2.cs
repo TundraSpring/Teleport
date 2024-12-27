@@ -1051,7 +1051,33 @@ public partial class player2 : Area2D
 
 
 
+        //public void SetSize(float size = 1F)
+        //{
+        //    AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
+        //    AnimatedSprite2D bodyVisual = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodyVisual");
+        //    CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
+        //    AnimatedSprite2D soulSprite = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulSprite");
+        //    AnimatedSprite2D soulVisual = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulVisual");
+        //    CollisionShape2D soulCollision = GetNode<CollisionShape2D>("PlayerSoul/PlayerSoulCollision");
+        //    AnimatedSprite2D scoutVisual = GetNode<AnimatedSprite2D>("PlayerScout/PlayerScoutVisual");
+        //    CollisionShape2D scoutCollision = GetNode<CollisionShape2D>("PlayerScout/PlayerScoutCollision");
+        //    Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
 
+        //    bodySprite.Scale = new Vector2(4F * size, 4F * size);
+        //    bodyVisual.Scale = new Vector2(0.16F * size, 0.16F * size);
+        //    bodyCollision.Position = new Vector2(0F, 15F * size);
+        //    bodyCollision.Scale = new Vector2(1F * size, 1F * size);
+        //    soulSprite.Scale = new Vector2(3F * size, 3F * size);
+        //    soulVisual.Scale = new Vector2(0.16F * size, 0.16F * size);
+        //    soulCollision.Scale = new Vector2(1F * size, 1F * size);
+        //    scoutVisual.Scale = new Vector2(0.16F * size, 0.16F * size);
+        //    scoutCollision.Scale = new Vector2(1F * size, 1F * size);
+        //    camera.Zoom = new Vector2(0.75F / size, 0.75F / size);
+
+        //    this.size = size;
+        //    UpdateHealthOrb(0);
+        //    UpdateEnergyOrb(0);
+        //}
 
 
 

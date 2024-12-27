@@ -29,10 +29,23 @@ public partial class RoomBridge : Area2D
 
     public void OnBodyEntered(Node2D node2D)
     {
+        //if (node2D.Name == "PlayerBody")
+        //{
+        //    Global.Instance.SetNextDestination(this);
+        //    EmitSignal(SignalName.Entered, "1", "2");
+        //}
         if (node2D.Name == "PlayerBody")
         {
-            Global.Instance.SetNextDestination(this);
-            EmitSignal(SignalName.Entered, "1", "2");
+            try
+            {
+                Room parent = (Room)GetParent();
+                Player player = Global.Instance.GetPlayer();
+                parent.RoomObjectEvent(player, node2D, ObjectEvent.HitboxEntered, this, this);
+            }
+            catch
+            {
+                GD.Print("ERROR: RoomBridge tried to send signal to non-existent room");
+            }
         }
     }
 }

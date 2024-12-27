@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://boefdk0hhylqw"]
 
 [ext_resource type="Texture2D" uid="uid://ce4nb0ern7sqk" path="res://art/NightflowerActive.png" id="1_btprv"]
-[ext_resource type="Script" path="res://Dygnflower.cs" id="1_ojt8a"]
+[ext_resource type="Script" path="res://GameObjects/Other Objects/Dygnflower.cs" id="1_v15ee"]
 [ext_resource type="Texture2D" uid="uid://ba8b2m0wyim15" path="res://art/DayFlowerActive.png" id="2_j1ljp"]
 [ext_resource type="Texture2D" uid="uid://c3ntdxvcxb81d" path="res://art/NightflowerWhite.png" id="2_wra86"]
 [ext_resource type="Texture2D" uid="uid://bi05i0bwx2apc" path="res://art/DayflowerPending.png" id="4_7ylue"]
@@ -84,7 +84,7 @@ radius = 39.0
 scale = Vector2(3, 3)
 collision_layer = 0
 collision_mask = 48
-script = ExtResource("1_ojt8a")
+script = ExtResource("1_v15ee")
 
 [node name="DygnflowerAnimation" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -18.5)

@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://c0asdg5g3sc2n"]
 
 [ext_resource type="PackedScene" uid="uid://c0jj1bwa6ykwc" path="res://Player.tscn" id="1_cxm3b"]
-[ext_resource type="Script" path="res://start.cs" id="1_ffvng"]
+[ext_resource type="Script" path="res://GameObjects/Rooms/start.cs" id="1_m1q5k"]
 [ext_resource type="PackedScene" uid="uid://cfy5lq3t65d07" path="res://platform.tscn" id="2_hvdsf"]
 [ext_resource type="PackedScene" uid="uid://ckbadyfts3p7m" path="res://PlatformBar.tscn" id="3_4820q"]
 [ext_resource type="PackedScene" uid="uid://boefdk0hhylqw" path="res://Dygnflower.tscn" id="5_yqovj"]
@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://b4ag0my4gyxcp" path="res://BreakablePlatform.tscn" id="7_48hul"]
 
 [node name="Start" type="Node2D"]
-script = ExtResource("1_ffvng")
+script = ExtResource("1_m1q5k")
 
 [node name="Player" parent="." instance=ExtResource("1_cxm3b")]
 
@@ -158,22 +158,19 @@ scale = Vector2(1.5, 1.5)
 [node name="StaticBody2D" parent="." instance=ExtResource("7_48hul")]
 position = Vector2(-6509, -1197)
 scale = Vector2(0.663766, 3.60991)
+script = null
 
 [node name="StaticBody2D2" parent="." instance=ExtResource("7_48hul")]
 position = Vector2(-6709, -1201)
 scale = Vector2(0.663766, 3.60991)
+script = null
 
 [node name="StaticBody2D3" parent="." instance=ExtResource("7_48hul")]
 position = Vector2(-6881, -1197)
 scale = Vector2(0.663766, 3.60991)
+script = null
 
 [node name="StaticBody2D4" parent="." instance=ExtResource("7_48hul")]
 position = Vector2(-6830, -388)
 scale = Vector2(0.663766, 3.60991)
-
-[connection signal="Interact" from="Player" to="." method="OnPlayerInteract"]
-[connection signal="Hit" from="Dygnflower0" to="." method="OnDygnflowerHit"]
-[connection signal="SetTeleport" from="Dygnflower0" to="." method="OnDygnflowerTeleportChange"]
-[connection signal="Hit" from="Dygnflower1" to="." method="OnDygnflowerHit"]
-[connection signal="SetTeleport" from="Dygnflower1" to="." method="OnDygnflowerTeleportChange"]
-[connection signal="Entered" from="RoomBridge0" to="." method="OnRoomBridgeEntered"]
+script = null

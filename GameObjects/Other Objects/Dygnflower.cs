@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using Teleport;
+using Teleport.GameObjects.Enums;
 
 public partial class Dygnflower : Area2D, IGameObject
 {
@@ -87,17 +88,17 @@ public partial class Dygnflower : Area2D, IGameObject
         }
     }
 
-    public void OnBodyExited(Node2D node2D)
-    {
-        if (node2D.Name == "PlayerSoul")
-        {
-            if (status == DygnflowerStatus.Ready)
-            {
-                SetStatus(DygnflowerStatus.Active);
-                EmitSignal(SignalName.SetTeleport, new Vector2(-9999999, -9999999));
-            }
-        }
-    }
+    //public void OnBodyExited(Node2D node2D)
+    //{
+    //    if (node2D.Name == "PlayerSoul")
+    //    {
+    //        if (status == DygnflowerStatus.Ready)
+    //        {
+    //            SetStatus(DygnflowerStatus.Active);
+    //            EmitSignal(SignalName.SetTeleport, new Vector2(-9999999, -9999999));
+    //        }
+    //    }
+    //}
 
     public void OnBodyEnteredOLD(Node2D node2D)
     {
@@ -125,6 +126,23 @@ public partial class Dygnflower : Area2D, IGameObject
                 Room parent = (Room)GetParent();
                 Player player = Global.Instance.GetPlayer();
                 parent.RoomObjectEvent(player, node2D, ObjectEvent.HitboxEntered, this, this);
+            }
+            catch
+            {
+                GD.Print("ERROR: Dygnflower tried to send signal to non-existent room");
+            }
+        }
+    }
+
+    public void OnBodyExited(Node2D node2D)
+    {
+        if (node2D.Name == "PlayerSoul" && status == DygnflowerStatus.Ready)
+        {
+            try
+            {
+                Room parent = (Room)GetParent();
+                Player player = Global.Instance.GetPlayer();
+                parent.RoomObjectEvent(player, node2D, ObjectEvent.HitboxExited, this, this);
             }
             catch
             {

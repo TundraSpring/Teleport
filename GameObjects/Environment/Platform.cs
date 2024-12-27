@@ -1,7 +1,8 @@
 using Godot;
 using System;
+using Teleport;
 
-public partial class Platform : Area2D
+public partial class Platform : StaticBody2D
 {
     public int timer = -1;
     // Called when the node enters the scene tree for the first time.
@@ -28,6 +29,5 @@ public partial class Platform : Area2D
 		{
             timer = 5;
         }
-		
-	}
+    }
 }

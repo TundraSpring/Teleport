@@ -1,15 +1,15 @@
 [gd_scene load_steps=4 format=3 uid="uid://b4ag0my4gyxcp"]
 
-[ext_resource type="Script" path="res://Platform.cs" id="1_wt2bj"]
+[ext_resource type="Script" path="res://GameObjects/Rooms/start.cs" id="1_1fr6y"]
 [ext_resource type="Texture2D" uid="uid://neprqety4r3t" path="res://art/blueSquare.png" id="2_lu3lg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1yrvj"]
 size = Vector2(100, 100)
 
-[node name="StaticBody2D" type="Area2D"]
+[node name="Plat1" type="Area2D"]
 collision_layer = 15
 collision_mask = 15
-script = ExtResource("1_wt2bj")
+script = ExtResource("1_1fr6y")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_lu3lg")
@@ -17,11 +17,11 @@ texture = ExtResource("2_lu3lg")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_1yrvj")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
+[node name="Plat2" type="StaticBody2D" parent="."]
 collision_layer = 15
 collision_mask = 15
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Plat2"]
 shape = SubResource("RectangleShape2D_1yrvj")
 
 [connection signal="body_entered" from="." to="." method="OnBodyEntered"]

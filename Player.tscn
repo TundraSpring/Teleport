@@ -1,6 +1,6 @@
 [gd_scene load_steps=31 format=3 uid="uid://c0jj1bwa6ykwc"]
 
-[ext_resource type="Script" path="res://Player.cs" id="1_x1iux"]
+[ext_resource type="Script" path="res://GameObjects/Player.cs" id="1_e33m5"]
 [ext_resource type="Texture2D" uid="uid://6ph6sfpl0ako" path="res://art/playerSoul.png" id="2_o26uv"]
 [ext_resource type="Texture2D" uid="uid://b6np1mc0tajsf" path="res://art/dragonCrouch2.png" id="3_8kkb6"]
 [ext_resource type="Texture2D" uid="uid://blu2t7m7nm3gy" path="res://art/draongFall.png" id="3_u2gwd"]
@@ -210,7 +210,7 @@ animations = [{
 radius = 32.0156
 
 [node name="Player" type="Node2D"]
-script = ExtResource("1_x1iux")
+script = ExtResource("1_e33m5")
 metadata/_edit_horizontal_guides_ = [0.0]
 
 [node name="PlayerTether" type="CharacterBody2D" parent="."]

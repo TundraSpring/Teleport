@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cur5llt7gp24d"]
 
-[ext_resource type="Script" path="res://RoomBridge.cs" id="1_sgthu"]
+[ext_resource type="Script" path="res://GameObjects/Other Objects/RoomBridge.cs" id="1_tud4o"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o5tfw"]
 size = Vector2(162, 161)
@@ -8,7 +8,7 @@ size = Vector2(162, 161)
 [node name="RoomBridge" type="Area2D"]
 collision_layer = 0
 collision_mask = 48
-script = ExtResource("1_sgthu")
+script = ExtResource("1_tud4o")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_o5tfw")

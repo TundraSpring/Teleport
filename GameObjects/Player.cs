@@ -9,25 +9,23 @@ using static Godot.TextServer;
 using System.IO;
 using static Godot.OpenXRHand;
 using GodotPlugins.Game;
+using System.Collections.Generic;
 
 public partial class Player : Node2D, IGameObject
 {
     public float speed = 800; // How fast the player will move (pixels/sec).
-    //public float JumpVelocity = -1500F;
     public float size;
     public Vector2 prevEventMousePos = new Vector2(0, 0);
-    //public float gravity = 25F;
     public float prevGravityMod = 7;
     public bool hasMoved = false;
-    //public bool isCrouched = false;
-    //public bool tryingToUncrouch = false;
-    //public float prevUncrouchMod = 0;
     public bool beganJumpThisFrame = false;
-    //public bool crouchCollisionSinceLastCheck = false;
     public int fastFallInputTimer = -1;
-    //public bool slam = false;
     public float? longJumpDir;
 
+    public int preAttackTimer = 0;
+    public int postAttackTimer = 0;
+    public Attack previousAttack;
+    public Attack nextAttack;
 
     public double energy = 400;
     public double maxEnergy = 400;
@@ -49,16 +47,12 @@ public partial class Player : Node2D, IGameObject
 
     public override void _Ready()
 	{
-        SetPlayerMode(PlayerMode.Body);
-       
-        SetSize(1F);
-        
-
         body = GetNode<CharacterBody2D>("PlayerBody");
         soul = GetNode<CharacterBody2D>("PlayerSoul");
         tether = GetNode<CharacterBody2D>("PlayerTether");
         scout = GetNode<CharacterBody2D>("PlayerScout");
 
+        SetPlayerMode(PlayerMode.Body);
         SetSoulStatus(PlayerSoulStatus.Default);
     }
 
@@ -117,7 +111,7 @@ public partial class Player : Node2D, IGameObject
         RestoreEnergy();
         MoveBody(delta);
         SetSoulPosition(delta);
-        DoAttack();
+        CheckAttack();
 
         if (bodyStatus == PlayerBodyStatus.CrouchingCramped)
         {
@@ -129,51 +123,137 @@ public partial class Player : Node2D, IGameObject
         }
     }
 
-    public void DoAttack()
+    public void CheckAttack()
     {
         if (Input.IsActionJustPressed("mouse1"))
         {
-            if (playerMode == PlayerMode.Body)
+            if      (playerMode == PlayerMode.Body)
             {
-                //var scene = GD.Load<PackedScene>("res://Projectile.tscn");
-                //Projectile instance = (Projectile)scene.Instantiate();
-                //instance.Boo();
-                //var scene2 = ResourceLoader.Load<PackedScene>("res://Projectile.cs").Instantiate();
+                DoMouse1Body();
+            }
+            else // (playerMode == PlayerMode.Soul)
+            {
+                DoMouse1Soul();
+            }
+        }
 
-                PackedScene Projectiles = GD.Load<PackedScene>("res://projectile.tscn");
-                Projectile projectile = (Projectile)Projectiles.Instantiate();
-                projectile.GlobalPosition = body.GlobalPosition;
-                Node node = GetParent(); //Start
-                                         //node.AddChild(projectile);
-                body.AddChild(projectile);
-                projectile.GlobalPosition = body.GlobalPosition;
-                AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
-                if (Input.IsActionPressed("up"))
-                {
-                    projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X, projectile.GlobalPosition.Y - 100);
-                }
-                else if (bodySprite.FlipH)
-                {
-                    projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X - 100, projectile.GlobalPosition.Y);
-                }
-                else
-                {
-                    projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X + 100, projectile.GlobalPosition.Y);
-                }
+        if (Input.IsActionJustPressed("mouse2"))
+        {
+            if      (playerMode == PlayerMode.Body)
+            {
+                DoMouse2Body();
+            }
+            else // (playerMode == PlayerMode.Soul)
+            {
+                DoMouse2Soul();
+            }
+        }
+
+        DoAttack();
+    }
+
+    public void DoAttack()
+    {
+        if (postAttackTimer > 0)
+        {
+            postAttackTimer--;
+        }
+        if (postAttackTimer == 0 && preAttackTimer > 0)
+        {
+            preAttackTimer--;
+        }
+        if (preAttackTimer == 0 && nextAttack != Attack.None)
+        {
+            nextAttack = Attack.None;
+        }
+    }
+
+    public void DecreaseAttackRecovery()
+    {
+
+    }
+
+    public void DoMouse1Body()
+    {
+        if (postAttackTimer == 0)
+        {
+            //var scene = GD.Load<PackedScene>("res://Projectile.tscn");
+            //Projectile instance = (Projectile)scene.Instantiate();
+            //instance.Boo();
+            //var scene2 = ResourceLoader.Load<PackedScene>("res://Projectile.cs").Instantiate();
+
+            PackedScene Projectiles = GD.Load<PackedScene>("res://projectile.tscn");
+            Projectile projectile = (Projectile)Projectiles.Instantiate();
+            projectile.GlobalPosition = body.GlobalPosition;
+            Node node = GetParent(); //Start
+                                     //node.AddChild(projectile);
+            body.AddChild(projectile);
+            projectile.GlobalPosition = body.GlobalPosition;
+            AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
+
+            projectile.SetData(this, 0, new List<int>() { 0, 1 }, 100, 0, 20, false, 5);
+            postAttackTimer = 15;
+
+            if (Input.IsActionPressed("up"))
+            {
+                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X, projectile.GlobalPosition.Y - 100);
+            }
+            else if (bodySprite.FlipH)
+            {
+                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X - 100, projectile.GlobalPosition.Y);
             }
             else
             {
-                if (body.Visible == true)
-                {
-                    body.Visible = false;
-                }
-                else
-                {
-                    body.Visible = true;
-                }
-                
+                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X + 100, projectile.GlobalPosition.Y);
             }
         }
+    }
+
+    public void DoMouse1Soul()
+    {
+
+    }
+
+    public void DoMouse2Body()
+    {
+        if (energy > 0 && postAttackTimer == 0)
+        {
+            //var scene = GD.Load<PackedScene>("res://Projectile.tscn");
+            //Projectile instance = (Projectile)scene.Instantiate();
+            //instance.Boo();
+            //var scene2 = ResourceLoader.Load<PackedScene>("res://Projectile.cs").Instantiate();
+
+            PackedScene Projectiles = GD.Load<PackedScene>("res://projectile.tscn");
+            Projectile projectile = (Projectile)Projectiles.Instantiate();
+            projectile.GlobalPosition = body.GlobalPosition;
+            Node node = GetParent(); //Start
+                                     //node.AddChild(projectile);
+            body.AddChild(projectile);
+            projectile.GlobalPosition = body.GlobalPosition;
+            AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
+
+            projectile.SetData(this, 0, new List<int>() { 0, 1 }, 100, 0, 0, true, 5);
+            UpdateEnergyOrb(-100);
+            postAttackTimer = 35;
+
+            if (Input.IsActionPressed("up"))
+            {
+                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X, projectile.GlobalPosition.Y - 100);
+            }
+            else if (bodySprite.FlipH)
+            {
+                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X - 100, projectile.GlobalPosition.Y);
+            }
+            else
+            {
+                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X + 100, projectile.GlobalPosition.Y);
+            }
+        }
+    }
+
+    public void DoMouse2Soul()
+    {
+
     }
 
     public override void _Process(double delta)
@@ -245,39 +325,11 @@ public partial class Player : Node2D, IGameObject
         this.playerMode = playerMode;
     }
 
-    public void SetSize(float size = 1F)
-    {
-        AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
-        AnimatedSprite2D bodyVisual = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodyVisual");
-        CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
-        AnimatedSprite2D soulSprite = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulSprite");
-        AnimatedSprite2D soulVisual = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulVisual");
-        CollisionShape2D soulCollision = GetNode<CollisionShape2D>("PlayerSoul/PlayerSoulCollision");
-        AnimatedSprite2D scoutVisual = GetNode<AnimatedSprite2D>("PlayerScout/PlayerScoutVisual");
-        CollisionShape2D scoutCollision = GetNode<CollisionShape2D>("PlayerScout/PlayerScoutCollision");
-        Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
-
-        bodySprite.Scale = new Vector2(4F * size, 4F * size);
-        bodyVisual.Scale = new Vector2(0.16F * size, 0.16F * size);
-        bodyCollision.Position = new Vector2(0F, 15F * size);
-        bodyCollision.Scale = new Vector2(1F * size, 1F * size);
-        soulSprite.Scale = new Vector2(3F * size, 3F * size);
-        soulVisual.Scale = new Vector2(0.16F * size, 0.16F * size);
-        soulCollision.Scale = new Vector2(1F * size, 1F * size);
-        scoutVisual.Scale = new Vector2(0.16F * size, 0.16F * size);
-        scoutCollision.Scale = new Vector2(1F * size, 1F * size);
-        camera.Zoom = new Vector2(0.75F / size, 0.75F / size);
-
-        this.size = size;
-        UpdateHealthOrb(0);
-        UpdateEnergyOrb(0);
-    }
-
     public void RestoreEnergy()
     {
         if (body.IsOnFloor() && soulStatus != PlayerSoulStatus.Box)
         {
-            UpdateEnergyOrb(2);
+            UpdateEnergyOrb(400);
         }
     }
 
@@ -536,7 +588,7 @@ public partial class Player : Node2D, IGameObject
     {
         if (Input.IsActionJustPressed("sneak") && !body.IsOnFloor() && bodyStatus != PlayerBodyStatus.CrouchingCramped && fastFallInputTimer != -1 && energy > 0)
         {
-            AddEnergy(-200);
+            UpdateEnergyOrb(-200);
             bodyStatus = PlayerBodyStatus.FastFalling;
             fastFallInputTimer = -1;
             return;
