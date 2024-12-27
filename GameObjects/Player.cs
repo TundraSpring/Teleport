@@ -13,40 +13,45 @@ using System.Collections.Generic;
 
 public partial class Player : Node2D, IGameObject
 {
-    public float speed = 800; // How fast the player will move (pixels/sec).
-    public float size;
+    //Movement values
     public Vector2 prevEventMousePos = new Vector2(0, 0);
     public float prevGravityMod = 7;
     public bool hasMoved = false;
     public bool beganJumpThisFrame = false;
     public int fastFallInputTimer = -1;
     public float? longJumpDir;
+    public int teleportInputTimer = 0;
+    public bool canGlide = true;
 
-    public int preAttackTimer = 0;
-    public int postAttackTimer = 0;
-    public Attack previousAttack;
-    public Attack nextAttack;
-
+    //Stats
     public double energy = 400;
     public double maxEnergy = 400;
     public double health = 100;
     public double maxHealth = 100;
-    public PlayerMode playerMode;
-    public PlayerBodyStatus bodyStatus;
-    public PlayerSoulStatus soulStatus = PlayerSoulStatus.Default;
-    public int teleportInputTimer = 0;
-    public bool canGlide = true;
 
+    //Character Parts
     public CharacterBody2D body;
     public CharacterBody2D soul;
     public CharacterBody2D tether;
     public CharacterBody2D scout;
 
+    //Action values
+    public int preAttackTimer = 0;
+    public int postAttackTimer = 0;
+    public Attack previousAttack;
+    public Attack nextAttack;
+
+    //Statuses
+    public PlayerMode playerMode;
+    public PlayerBodyStatus bodyStatus;
+    public PlayerSoulStatus soulStatus = PlayerSoulStatus.Default;
+
     [Signal]
     public delegate void InteractEventHandler();
 
     public override void _Ready()
-	{
+	{       
+        SetSize();
         body = GetNode<CharacterBody2D>("PlayerBody");
         soul = GetNode<CharacterBody2D>("PlayerSoul");
         tether = GetNode<CharacterBody2D>("PlayerTether");
@@ -56,54 +61,73 @@ public partial class Player : Node2D, IGameObject
         SetSoulStatus(PlayerSoulStatus.Default);
     }
 
+    public void SetCameraLimits(int left, int top, int right, int bottom)
+    {
+        Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
+        camera.LimitLeft = left;
+        camera.LimitTop = top;
+        camera.LimitRight = right;
+        camera.LimitBottom = bottom;
+    }
+
     public void SetSoulStatus(PlayerSoulStatus newSoulStatus)
     {
         if (newSoulStatus == PlayerSoulStatus.Box)
         {
-            soul.CollisionLayer = 290;
-            soul.CollisionMask = 290;
-
-            AnimatedSprite2D soulSprite = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulSprite");
-            AnimatedSprite2D soulVisual = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulVisual");
-            CollisionShape2D soulCollision = GetNode<CollisionShape2D>("PlayerSoul/PlayerSoulCollision");
-            AnimatedSprite2D soulEnergy = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulEnergy");
-            soulSprite.Animation = "Square";
-            soulVisual.Animation = "Square";
-            soulCollision.Shape = new RectangleShape2D();
-            soulCollision.Scale = new Vector2(3.2F, 3.2F);
-            soulEnergy.Animation = "Square";
-
-            AnimatedSprite2D scoutVisual = GetNode<AnimatedSprite2D>("PlayerScout/PlayerScoutVisual");
-            CollisionShape2D scoutCollision = GetNode<CollisionShape2D>("PlayerScout/PlayerScoutCollision");
-            scoutVisual.Animation = "Square";
-            scoutCollision.Shape = new CircleShape2D();
-            scoutCollision.Scale = new Vector2(3.2F, 3.2F);
-
-            soulStatus = PlayerSoulStatus.Box;
+            SetSoulToBox();
         }
         else if (newSoulStatus == PlayerSoulStatus.Default)
         {
-            soul.CollisionLayer = 34;
-            soul.CollisionMask = 34;
-
-            AnimatedSprite2D soulSprite = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulSprite");
-            AnimatedSprite2D soulVisual = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulVisual");
-            CollisionShape2D soulCollision = GetNode<CollisionShape2D>("PlayerSoul/PlayerSoulCollision");
-            AnimatedSprite2D soulEnergy = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulEnergy");
-            soulSprite.Animation = "Default";
-            soulVisual.Animation = "Default";
-            soulCollision.Shape = new CircleShape2D();
-            soulCollision.Scale = new Vector2(3.2F, 3.2F);
-            soulEnergy.Animation = "Default";
-
-            AnimatedSprite2D scoutVisual = GetNode<AnimatedSprite2D>("PlayerScout/PlayerScoutVisual");
-            CollisionShape2D scoutCollision = GetNode<CollisionShape2D>("PlayerScout/PlayerScoutCollision");
-            scoutVisual.Animation = "Default";
-            scoutCollision.Shape = new CircleShape2D();
-            scoutCollision.Scale = new Vector2(3.2F, 3.2F);
-
-            soulStatus = PlayerSoulStatus.Default;
+            SetSoulToDefault();
         }
+    }
+
+    private void SetSoulToBox()
+    {
+        soul.CollisionLayer = 290;
+        soul.CollisionMask = 290;
+
+        AnimatedSprite2D soulSprite = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulSprite");
+        AnimatedSprite2D soulVisual = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulVisual");
+        CollisionShape2D soulCollision = GetNode<CollisionShape2D>("PlayerSoul/PlayerSoulCollision");
+        AnimatedSprite2D soulEnergy = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulEnergy");
+        soulSprite.Animation = "Square";
+        soulVisual.Animation = "Square";
+        soulCollision.Shape = new RectangleShape2D();
+        soulCollision.Scale = new Vector2(3.2F, 3.2F);
+        soulEnergy.Animation = "Square";
+
+        AnimatedSprite2D scoutVisual = GetNode<AnimatedSprite2D>("PlayerScout/PlayerScoutVisual");
+        CollisionShape2D scoutCollision = GetNode<CollisionShape2D>("PlayerScout/PlayerScoutCollision");
+        scoutVisual.Animation = "Square";
+        scoutCollision.Shape = new CircleShape2D();
+        scoutCollision.Scale = new Vector2(3.2F, 3.2F);
+
+        soulStatus = PlayerSoulStatus.Box;
+    }
+
+    private void SetSoulToDefault()
+    {
+        soul.CollisionLayer = 34;
+        soul.CollisionMask = 34;
+
+        AnimatedSprite2D soulSprite = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulSprite");
+        AnimatedSprite2D soulVisual = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulVisual");
+        CollisionShape2D soulCollision = GetNode<CollisionShape2D>("PlayerSoul/PlayerSoulCollision");
+        AnimatedSprite2D soulEnergy = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulEnergy");
+        soulSprite.Animation = "Default";
+        soulVisual.Animation = "Default";
+        soulCollision.Shape = new CircleShape2D();
+        soulCollision.Scale = new Vector2(3.2F, 3.2F);
+        soulEnergy.Animation = "Default";
+
+        AnimatedSprite2D scoutVisual = GetNode<AnimatedSprite2D>("PlayerScout/PlayerScoutVisual");
+        CollisionShape2D scoutCollision = GetNode<CollisionShape2D>("PlayerScout/PlayerScoutCollision");
+        scoutVisual.Animation = "Default";
+        scoutCollision.Shape = new CircleShape2D();
+        scoutCollision.Scale = new Vector2(3.2F, 3.2F);
+
+        soulStatus = PlayerSoulStatus.Default;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -111,7 +135,6 @@ public partial class Player : Node2D, IGameObject
         RestoreEnergy();
         MoveBody(delta);
         SetSoulPosition(delta);
-        CheckAttack();
 
         if (bodyStatus == PlayerBodyStatus.CrouchingCramped)
         {
@@ -121,149 +144,6 @@ public partial class Player : Node2D, IGameObject
         {
             beganJumpThisFrame = false;
         }
-    }
-
-    public void CheckAttack()
-    {
-        if (Input.IsActionJustPressed("mouse1"))
-        {
-            if      (playerMode == PlayerMode.Body)
-            {
-                DoMouse1Body();
-            }
-            else // (playerMode == PlayerMode.Soul)
-            {
-                DoMouse1Soul();
-            }
-        }
-
-        if (Input.IsActionJustPressed("mouse2"))
-        {
-            if      (playerMode == PlayerMode.Body)
-            {
-                DoMouse2Body();
-            }
-            else // (playerMode == PlayerMode.Soul)
-            {
-                DoMouse2Soul();
-            }
-        }
-
-        DoAttack();
-    }
-
-    public void DoAttack()
-    {
-        if (postAttackTimer > 0)
-        {
-            postAttackTimer--;
-        }
-        if (postAttackTimer == 0 && preAttackTimer > 0)
-        {
-            preAttackTimer--;
-        }
-        if (preAttackTimer == 0 && nextAttack != Attack.None)
-        {
-            nextAttack = Attack.None;
-        }
-    }
-
-    public void DecreaseAttackRecovery()
-    {
-
-    }
-
-    public void DoMouse1Body()
-    {
-        if (postAttackTimer == 0)
-        {
-            //var scene = GD.Load<PackedScene>("res://Projectile.tscn");
-            //Projectile instance = (Projectile)scene.Instantiate();
-            //instance.Boo();
-            //var scene2 = ResourceLoader.Load<PackedScene>("res://Projectile.cs").Instantiate();
-
-            PackedScene Projectiles = GD.Load<PackedScene>("res://projectile.tscn");
-            Projectile projectile = (Projectile)Projectiles.Instantiate();
-            projectile.GlobalPosition = body.GlobalPosition;
-            Node node = GetParent(); //Start
-                                     //node.AddChild(projectile);
-            body.AddChild(projectile);
-            projectile.GlobalPosition = body.GlobalPosition;
-            AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
-
-            projectile.SetData(this, 0, new List<int>() { 0, 1 }, 100, 0, 20, false, 5);
-            postAttackTimer = 15;
-
-            if (Input.IsActionPressed("up"))
-            {
-                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X, projectile.GlobalPosition.Y - 100);
-            }
-            else if (bodySprite.FlipH)
-            {
-                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X - 100, projectile.GlobalPosition.Y);
-            }
-            else
-            {
-                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X + 100, projectile.GlobalPosition.Y);
-            }
-        }
-    }
-
-    public void DoMouse1Soul()
-    {
-
-    }
-
-    public void DoMouse2Body()
-    {
-        if (energy > 0 && postAttackTimer == 0)
-        {
-            //var scene = GD.Load<PackedScene>("res://Projectile.tscn");
-            //Projectile instance = (Projectile)scene.Instantiate();
-            //instance.Boo();
-            //var scene2 = ResourceLoader.Load<PackedScene>("res://Projectile.cs").Instantiate();
-
-            PackedScene Projectiles = GD.Load<PackedScene>("res://projectile.tscn");
-            Projectile projectile = (Projectile)Projectiles.Instantiate();
-            projectile.GlobalPosition = body.GlobalPosition;
-            Node node = GetParent(); //Start
-                                     //node.AddChild(projectile);
-            body.AddChild(projectile);
-            projectile.GlobalPosition = body.GlobalPosition;
-            AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
-
-            projectile.SetData(this, 0, new List<int>() { 0, 1 }, 100, 0, 0, true, 5);
-            UpdateEnergyOrb(-100);
-            postAttackTimer = 35;
-
-            if (Input.IsActionPressed("up"))
-            {
-                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X, projectile.GlobalPosition.Y - 100);
-            }
-            else if (bodySprite.FlipH)
-            {
-                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X - 100, projectile.GlobalPosition.Y);
-            }
-            else
-            {
-                projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X + 100, projectile.GlobalPosition.Y);
-            }
-        }
-    }
-
-    public void DoMouse2Soul()
-    {
-
-    }
-
-    public override void _Process(double delta)
-	{
-
-    }
-
-    public void SetData(float size, double energy, double health, PlayerMode playerMode, bool canGlide)
-    {
-
     }
 
     public override void _Input(InputEvent @event)
@@ -291,15 +171,6 @@ public partial class Player : Node2D, IGameObject
         body.Position = destination;
     }
 
-    public void SetCameraLimits(int left, int top, int right, int bottom)
-    {
-        Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
-        camera.LimitLeft = left;
-        camera.LimitTop = top;
-        camera.LimitRight = right;
-        camera.LimitBottom = bottom; 
-    }
-
     public void SetPlayerMode(PlayerMode playerMode)
     {
         AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
@@ -325,18 +196,40 @@ public partial class Player : Node2D, IGameObject
         this.playerMode = playerMode;
     }
 
+    public void SetSize()
+    {
+        AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
+        AnimatedSprite2D bodyVisual = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodyVisual");
+        CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
+        AnimatedSprite2D soulSprite = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulSprite");
+        AnimatedSprite2D soulVisual = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulVisual");
+        CollisionShape2D soulCollision = GetNode<CollisionShape2D>("PlayerSoul/PlayerSoulCollision");
+        AnimatedSprite2D scoutVisual = GetNode<AnimatedSprite2D>("PlayerScout/PlayerScoutVisual");
+        CollisionShape2D scoutCollision = GetNode<CollisionShape2D>("PlayerScout/PlayerScoutCollision");
+        Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
+
+        bodySprite.Scale = new Vector2(4F, 4F);
+        bodyVisual.Scale = new Vector2(0.16F, 0.16F);
+        bodyCollision.Position = new Vector2(0F, 15F);
+        bodyCollision.Scale = new Vector2(1F, 1F);
+        soulSprite.Scale = new Vector2(3F, 3F);
+        soulVisual.Scale = new Vector2(0.16F, 0.16F);
+        soulCollision.Scale = new Vector2(1F, 1F);
+        scoutVisual.Scale = new Vector2(0.16F, 0.16F);
+        scoutCollision.Scale = new Vector2(1F, 1F);
+        camera.Zoom = new Vector2(0.75F, 0.75F);
+
+        //this.size = size;
+        //UpdateHealthOrb(0);
+        //UpdateEnergyOrb(0);
+    }
+
     public void RestoreEnergy()
     {
         if (body.IsOnFloor() && soulStatus != PlayerSoulStatus.Box)
         {
-            UpdateEnergyOrb(400);
+            AddEnergy(2);
         }
-    }
-
-    public void UpdateHealthOrb(double addedHealth)
-    {
-        AddHealth(addedHealth);
-        SetHealthOrbSize();
     }
 
     public void AddHealth(double addedHealth)
@@ -346,26 +239,21 @@ public partial class Player : Node2D, IGameObject
         {
             health = maxHealth;
         }
+        SetHealthOrbSize();
     }
 
-    public void SetHealthOrbSize()
+    private void SetHealthOrbSize()
     {
         AnimatedSprite2D bodyHealth = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodyHealth");
         if (health > 0)
         {
-            double newSize = 0.16F * (health / maxHealth) * size;
+            double newSize = 0.16F * (health / maxHealth) * 1F; //1F is size
             bodyHealth.Scale = new Vector2((float)newSize, (float)newSize);
         }
         else
         {
             bodyHealth.Scale = new Vector2(0, 0);
         }
-    }
-
-    public void UpdateEnergyOrb(double addedEnergy)
-    {
-        AddEnergy(addedEnergy);
-        SetEnergyOrbSize();
     }
 
     public void AddEnergy(double addedEnergy)
@@ -375,14 +263,15 @@ public partial class Player : Node2D, IGameObject
         {
             energy = maxEnergy;
         }
+        SetEnergyOrbSize();
     }
 
-    public void SetEnergyOrbSize()
+    private void SetEnergyOrbSize()
     {
         AnimatedSprite2D soulEnergy = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulEnergy");
         if (energy > 0)
         {
-            double newSize = 0.16F * (energy / maxEnergy) * size;
+            double newSize = 0.16F * (energy / maxEnergy) * 1F; //1F is size
             soulEnergy.Scale = new Vector2((float)newSize, (float)newSize);
         }
         else
@@ -394,7 +283,6 @@ public partial class Player : Node2D, IGameObject
     public void MoveBody(double delta)
     {
         bool onGroundBefore = body.IsOnFloor();
-        bool crouchedBefore = (bodyStatus == PlayerBodyStatus.Crouching || bodyStatus == PlayerBodyStatus.CrouchingCramped);
         Vector2 velocity = body.Velocity;
         MoveBodyVertically(ref velocity);
         MoveBodyHorizontally(ref velocity);
@@ -426,7 +314,7 @@ public partial class Player : Node2D, IGameObject
             if (energy >= 0 && teleportInputTimer >= 20)
             {
 
-                UpdateEnergyOrb(-2);
+                AddEnergy(-2);
             }
 
             
@@ -448,8 +336,8 @@ public partial class Player : Node2D, IGameObject
             if (teleportInputTimer < 10 && energy >= 1)
             {
                 Teleport(soul.Position);
-                UpdateEnergyOrb(-200);
-                UpdateHealthOrb(-5);
+                AddEnergy(-200);
+                AddHealth(-5);
             }
             else if (soulStatus == PlayerSoulStatus.Box)
             {
@@ -465,7 +353,7 @@ public partial class Player : Node2D, IGameObject
 
         if (!body.IsOnFloor())
         {
-            float gravity = 25F * size;
+            float gravity = 25F; // * 1F; //1F is size
             float gravityMod = GetGravityMod(velocity);
 
             //Sets velocity to 0 when velocity goes in the positives to make sure gravityMod works correctly
@@ -480,7 +368,7 @@ public partial class Player : Node2D, IGameObject
             //The following is true if you are gliding downwards
             if (gravityMod == 1 && velocity.Y > 0)
             {
-                UpdateEnergyOrb(-2);
+                AddEnergy(-2);
             }
 
             //Makes sure velocity doesn't go beyond the maximum allowed
@@ -535,20 +423,20 @@ public partial class Player : Node2D, IGameObject
             {
                 if (direction.X == 0)
                 {
-                    velocity.Y += -2100F * size;
-                    UpdateEnergyOrb(-200);
+                    velocity.Y += -2100F; // * size; //1F is size
+                    AddEnergy(-200);
                 }
                 else
                 {
-                    velocity.Y += -700F * size;
-                    UpdateEnergyOrb(-200);
+                    velocity.Y += -700F; // * size; //1F is size
+                    AddEnergy(-200);
                     bodyStatus = PlayerBodyStatus.Longjumping;
                     longJumpDir = direction.X;
                 }
             }
             else
             {
-                velocity.Y += -1500F * size;
+                velocity.Y += -1500F; // * size; //1F is size
                 //velocity.Y += -1000F * size;
             }
         }
@@ -588,7 +476,7 @@ public partial class Player : Node2D, IGameObject
     {
         if (Input.IsActionJustPressed("sneak") && !body.IsOnFloor() && bodyStatus != PlayerBodyStatus.CrouchingCramped && fastFallInputTimer != -1 && energy > 0)
         {
-            UpdateEnergyOrb(-200);
+            AddEnergy(-200);
             bodyStatus = PlayerBodyStatus.FastFalling;
             fastFallInputTimer = -1;
             return;
@@ -653,11 +541,11 @@ public partial class Player : Node2D, IGameObject
 
         if (direction != Vector2.Zero)
         {
-            velocity.X = direction.X * ((speed * size) * sneakMod);
+            velocity.X = direction.X * (800 * sneakMod); //800 is speed in pixels per second
         }
         else
         {
-            velocity.X = Mathf.MoveToward(body.Velocity.X, 0, ((speed * size) * sneakMod));
+            velocity.X = Mathf.MoveToward(body.Velocity.X, 0, (800 * sneakMod)); //800 is speed in pixels per second
         }
     }
 
@@ -681,10 +569,10 @@ public partial class Player : Node2D, IGameObject
 
         if (!isCrouched && crouchNow && body.IsOnFloor())
         {
-            bodySprite.Position = new Vector2(bodySprite.Position.X, -10F * size);
+            bodySprite.Position = new Vector2(bodySprite.Position.X, -10F);
             bodyCollision.Position = new Vector2(bodySprite.Position.X, 0F);
-            bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 0.68F * size);
-            body.Position = new Vector2(body.Position.X, body.Position.Y + 30F * size);
+            bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 0.68F);
+            body.Position = new Vector2(body.Position.X, body.Position.Y + 30F);
             camera.Position = new Vector2(0, -30);
             isCrouched = true;
         }
@@ -715,9 +603,9 @@ public partial class Player : Node2D, IGameObject
                 Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
 
                 bodySprite.Position = new Vector2(bodySprite.Position.X, 0F);
-                bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F * size);
-                bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F * size);
-                body.Position = new Vector2(body.Position.X, body.Position.Y - 30F * size);
+                bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F);
+                bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F);
+                body.Position = new Vector2(body.Position.X, body.Position.Y - 30F);
                 camera.Position = new Vector2(0, 0);
             }
         //}
@@ -914,7 +802,7 @@ public partial class Player : Node2D, IGameObject
     {
         //if distance between cursor and playerBody is greater than 150 (pixels?), then set cursorPos (Not the actual cursor) to be 150 away from playerBody, pointing towards cursor
         double cursorDistance = Math.Sqrt(Math.Pow(soul.Position.X - body.Position.X, 2) + Math.Pow(soul.Position.Y - body.Position.Y, 2));
-        if (cursorDistance > (375 * size))
+        if (cursorDistance > 375)
         {
             soul.Position = body.Position;
         }
@@ -926,9 +814,9 @@ public partial class Player : Node2D, IGameObject
 
         //if distance between cursor and playerBody is greater than 150 (pixels?), then set cursorPos (Not the actual cursor) to be 150 away from playerBody, pointing towards cursor
         double cursorDistance = Math.Sqrt(Math.Pow(cursorPos.X - 0, 2) + Math.Pow(cursorPos.Y - 0, 2));
-        if (cursorDistance > (350 * size))
+        if (cursorDistance > 350)
         {
-            double multiplier = (350 * size) / cursorDistance;
+            double multiplier = 350 / cursorDistance;
             cursorPos = new Vector2((float)(cursorPos.X * multiplier), (float)(cursorPos.Y * multiplier)); //HERE
         }
         return cursorPos;

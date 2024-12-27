@@ -64,7 +64,7 @@ namespace Teleport
         {
             playerNodeObj = GetNode<Player>("Player");
             Player savedPlayer = Global.Instance.GetPlayer();
-            GD.Print(savedPlayer.size);
+            //GD.Print(savedPlayer.size);
             //playerNodeObj = savedPlayer;
             playerNodeObj.SetCameraLimits((int)rp.cameraLimits[0], (int)rp.cameraLimits[1], (int)rp.cameraLimits[2], (int)rp.cameraLimits[3]);
             playerNodeObj.Teleport(rp.playerSpawnPoints[spawnPos]);

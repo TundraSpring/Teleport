@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using static System.Formats.Asn1.AsnWriter;
 
@@ -1080,19 +1081,186 @@ public partial class player2 : Area2D
         //}
 
 
+        //public void SetHealthOrbSize()
+        //{
+        //    AnimatedSprite2D bodyHealth = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodyHealth");
+        //    if (health > 0)
+        //    {
+        //        double newSize = 0.16F * (health / maxHealth) * 1F; //1F is size
+        //        bodyHealth.Scale = new Vector2((float)newSize, (float)newSize);
+        //    }
+        //    else
+        //    {
+        //        bodyHealth.Scale = new Vector2(0, 0);
+        //    }
+        //}
+
+
+        //public void UpdateHealthOrb(double addedHealth)
+        //{
+        //    AddHealth(addedHealth);
+        //    SetHealthOrbSize();
+        //}
+
+        //public void SetEnergyOrbSize()
+        //{
+        //    AnimatedSprite2D soulEnergy = GetNode<AnimatedSprite2D>("PlayerSoul/PlayerSoulEnergy");
+        //    if (energy > 0)
+        //    {
+        //        double newSize = 0.16F * (energy / maxEnergy) * 1F; //1F is size
+        //        soulEnergy.Scale = new Vector2((float)newSize, (float)newSize);
+        //    }
+        //    else
+        //    {
+        //        soulEnergy.Scale = new Vector2(0, 0);
+        //    }
+        //}
+
+        //public void UpdateEnergyOrb(double addedEnergy)
+        //{
+        //    AddEnergy(addedEnergy);
+        //    SetEnergyOrbSize();
+        //}
+
+        //public void CheckAttack()
+        //{
+        //    if (Input.IsActionJustPressed("mouse1"))
+        //    {
+        //        if (playerMode == PlayerMode.Body)
+        //        {
+        //            DoMouse1Body();
+        //        }
+        //        else // (playerMode == PlayerMode.Soul)
+        //        {
+        //            DoMouse1Soul();
+        //        }
+        //    }
+
+        //    if (Input.IsActionJustPressed("mouse2"))
+        //    {
+        //        if (playerMode == PlayerMode.Body)
+        //        {
+        //            DoMouse2Body();
+        //        }
+        //        else // (playerMode == PlayerMode.Soul)
+        //        {
+        //            DoMouse2Soul();
+        //        }
+        //    }
+
+        //    DoAttack();
+        //}
+
+
+        //public void DoAttack()
+        //{
+        //    if (postAttackTimer > 0)
+        //    {
+        //        postAttackTimer--;
+        //    }
+        //    if (postAttackTimer == 0 && preAttackTimer > 0)
+        //    {
+        //        preAttackTimer--;
+        //    }
+        //    if (preAttackTimer == 0 && nextAttack != Attack.None)
+        //    {
+        //        nextAttack = Attack.None;
+        //    }
+        //}
+
+        //public void DecreaseAttackRecovery()
+        //{
+
+        //}
+
+        //public void DoMouse1Body()
+        //{
+        //    if (postAttackTimer == 0)
+        //    {
+        //        //var scene = GD.Load<PackedScene>("res://Projectile.tscn");
+        //        //Projectile instance = (Projectile)scene.Instantiate();
+        //        //instance.Boo();
+        //        //var scene2 = ResourceLoader.Load<PackedScene>("res://Projectile.cs").Instantiate();
+
+        //        PackedScene Projectiles = GD.Load<PackedScene>("res://projectile.tscn");
+        //        Projectile projectile = (Projectile)Projectiles.Instantiate();
+        //        projectile.GlobalPosition = body.GlobalPosition;
+        //        Node node = GetParent(); //Start
+        //                                 //node.AddChild(projectile);
+        //        body.AddChild(projectile);
+        //        projectile.GlobalPosition = body.GlobalPosition;
+        //        AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
 
+        //        projectile.SetData(this, 0, new List<int>() { 0, 1 }, 100, 0, 20, false, 5);
+        //        postAttackTimer = 15;
 
+        //        if (Input.IsActionPressed("up"))
+        //        {
+        //            projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X, projectile.GlobalPosition.Y - 100);
+        //        }
+        //        else if (bodySprite.FlipH)
+        //        {
+        //            projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X - 100, projectile.GlobalPosition.Y);
+        //        }
+        //        else
+        //        {
+        //            projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X + 100, projectile.GlobalPosition.Y);
+        //        }
+        //    }
+        //}
 
+        //public void DoMouse1Soul()
+        //{
 
+        //}
 
+        //public void DoMouse2Body()
+        //{
+        //    if (energy > 0 && postAttackTimer == 0)
+        //    {
+        //        //var scene = GD.Load<PackedScene>("res://Projectile.tscn");
+        //        //Projectile instance = (Projectile)scene.Instantiate();
+        //        //instance.Boo();
+        //        //var scene2 = ResourceLoader.Load<PackedScene>("res://Projectile.cs").Instantiate();
 
+        //        PackedScene Projectiles = GD.Load<PackedScene>("res://projectile.tscn");
+        //        Projectile projectile = (Projectile)Projectiles.Instantiate();
+        //        projectile.GlobalPosition = body.GlobalPosition;
+        //        Node node = GetParent(); //Start
+        //                                 //node.AddChild(projectile);
+        //        body.AddChild(projectile);
+        //        projectile.GlobalPosition = body.GlobalPosition;
+        //        AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
 
+        //        projectile.SetData(this, 0, new List<int>() { 0, 1 }, 100, 0, 0, true, 5);
+        //        UpdateEnergyOrb(-100);
+        //        postAttackTimer = 35;
 
+        //        if (Input.IsActionPressed("up"))
+        //        {
+        //            projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X, projectile.GlobalPosition.Y - 100);
+        //        }
+        //        else if (bodySprite.FlipH)
+        //        {
+        //            projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X - 100, projectile.GlobalPosition.Y);
+        //        }
+        //        else
+        //        {
+        //            projectile.GlobalPosition = new Vector2(projectile.GlobalPosition.X + 100, projectile.GlobalPosition.Y);
+        //        }
+        //    }
+        //}
 
+        //public void DoMouse2Soul()
+        //{
 
+        //}
 
 
+    //        public override void _Process(double delta)
+    //{
 
+    //}
 
 
 
@@ -1162,7 +1330,5 @@ public partial class player2 : Area2D
 
 
 
-
-
-    }
+}
 }
