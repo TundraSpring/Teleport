@@ -10,15 +10,15 @@ using System.IO;
 using static Godot.OpenXRHand;
 using GodotPlugins.Game;
 using System.Collections.Generic;
+using Teleport;
 
 public partial class Player : Node2D, IGameObject
 {
     //Movement values
     public Vector2 prevEventMousePos = new Vector2(0, 0);
     public float prevGravityMod = 7;
-    public bool hasMoved = false;
+    public bool dropDownPlatform = false;
     public bool beganJumpThisFrame = false;
-    public int fastFallInputTimer = -1;
     public float? longJumpDir;
     public int teleportInputTimer = 0;
     public bool canGlide = true;
@@ -134,16 +134,7 @@ public partial class Player : Node2D, IGameObject
     {
         RestoreEnergy();
         MoveBody(delta);
-        SetSoulPosition(delta);
-
-        if (bodyStatus == PlayerBodyStatus.CrouchingCramped)
-        {
-            beganJumpThisFrame = true;
-        }
-        else
-        {
-            beganJumpThisFrame = false;
-        }
+        MoveSoul(delta);
     }
 
     public override void _Input(InputEvent @event)
@@ -164,7 +155,60 @@ public partial class Player : Node2D, IGameObject
         {
             EmitSignal(SignalName.Interact);
         }
+        else if (Input.IsActionJustPressed("jump"))
+        {
+            SetJumpVelocity();
+        }
+        else if (Input.IsActionJustPressed("teleport") && energy > 0)
+        {
+            Teleport(soul.Position);
+            AddEnergy(-200);
+        }
+        else if (Input.IsActionJustPressed("mouse2") && bodyStatus == PlayerBodyStatus.Crouching)
+        {
+            //Distance between body and soul
+            //GD.Print(Math.Sqrt(Math.Pow(soul.Position.X - body.Position.X, 2) + Math.Pow(soul.Position.Y - body.Position.Y, 2)));
+
+            //Degrees
+            CursorDirection direction = GetSoulDirection();
+            GD.Print(direction);
+            
+        }
     }
+
+    public void SetJumpVelocity()
+    {
+        if (body.IsOnFloor())
+        {
+            beganJumpThisFrame = true;
+            Vector2 direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
+            if (bodyStatus == PlayerBodyStatus.Crouching && energy > 0)
+            {
+                if (direction.X == 0)
+                {
+                    body.Velocity = new Vector2(body.Velocity.X, -2100F);
+                    body.MoveAndSlide();
+                    AddEnergy(-200);
+                }
+                else
+                {
+                    body.Velocity = new Vector2(body.Velocity.X, -700F);
+                    body.MoveAndSlide();
+
+                    AddEnergy(-200);
+                    bodyStatus = PlayerBodyStatus.Longjumping;
+                    longJumpDir = direction.X;
+                }
+            }
+            else
+            {
+                body.Velocity = new Vector2(body.Velocity.X, -1500F);
+                body.MoveAndSlide();
+                //velocity.Y += -1000F * size;
+            }
+        }
+    }
+
 
     public void Teleport(Vector2 destination)
     {
@@ -282,75 +326,45 @@ public partial class Player : Node2D, IGameObject
 
     public void MoveBody(double delta)
     {
-        bool onGroundBefore = body.IsOnFloor();
+        //bool onGroundBefore = body.IsOnFloor();
         Vector2 velocity = body.Velocity;
-        MoveBodyVertically(ref velocity);
-        MoveBodyHorizontally(ref velocity);
-        CheckForTeleport();
+        CheckDropDownPlatform();
+        SetVerticalBodyMovement(ref velocity);
+        CrouchOrTryToUncrouch();
+        SetHorizontalBodyMovement(ref velocity);
         SetPlayerBodyStatus2();
         SetBodySprite(velocity);
+        ApplyBodyMovement(velocity);
 
+        //bool onGroundAfter = body.IsOnFloor();
+        //if (onGroundBefore != onGroundAfter)
+        //{
+        //    CrouchOrTryToUncrouch();
+        //}
+
+        if (bodyStatus == PlayerBodyStatus.CrouchingCramped)
+        {
+            beganJumpThisFrame = true;
+        }
+        else
+        {
+            beganJumpThisFrame = false;
+        }
+    }
+
+    private void ApplyBodyMovement(Vector2 velocity)
+    {
         body.Velocity = velocity;
         body.MoveAndSlide();
 
-
         if (velocity != Vector2.Zero)
         {
-            hasMoved = true;
-        }
-        bool onGroundAfter = body.IsOnFloor();
-        if (onGroundBefore != onGroundAfter)
-        {
-            ToggleCrouchMode3();
+            dropDownPlatform = false;
         }
     }
 
-    public void CheckForTeleport()
+    public void SetVerticalBodyMovement(ref Vector2 velocity)
     {
-        if (Input.IsActionPressed("teleport"))
-        {
-            teleportInputTimer++;
-
-            if (energy >= 0 && teleportInputTimer >= 20)
-            {
-
-                AddEnergy(-2);
-            }
-
-            
-            if (teleportInputTimer >= 20 && energy >= 50 && soulStatus != PlayerSoulStatus.Box)
-            {
-                SetSoulStatus(PlayerSoulStatus.Box);
-            }
-            if (soulStatus == PlayerSoulStatus.Box)
-            {
-                
-                if (energy <= 0)
-                {
-                    SetSoulStatus(PlayerSoulStatus.Default);
-                }
-            }
-        }
-        if (Input.IsActionJustReleased("teleport"))
-        {
-            if (teleportInputTimer < 10 && energy >= 1)
-            {
-                Teleport(soul.Position);
-                AddEnergy(-200);
-                AddHealth(-5);
-            }
-            else if (soulStatus == PlayerSoulStatus.Box)
-            {
-                SetSoulStatus(PlayerSoulStatus.Default);
-            }
-            teleportInputTimer = 0;
-        }
-    }
-
-    public void MoveBodyVertically(ref Vector2 velocity)
-    {
-        GetJumpVelocity(ref velocity);
-
         if (!body.IsOnFloor())
         {
             float gravity = 25F; // * 1F; //1F is size
@@ -361,10 +375,10 @@ public partial class Player : Node2D, IGameObject
             {
                 velocity.Y = 0;
             }
-
             velocity = SetFallingVelocityToLightOrHeavy(velocity, gravityMod);
-            velocity.Y += gravity * gravityMod;
             
+            velocity.Y += gravity * gravityMod;
+
             //The following is true if you are gliding downwards
             if (gravityMod == 1 && velocity.Y > 0)
             {
@@ -413,40 +427,10 @@ public partial class Player : Node2D, IGameObject
         return velocity;
     }
 
-    public void GetJumpVelocity(ref Vector2 velocity)
-    {
-        if (Input.IsActionJustPressed("jump") && body.IsOnFloor())
-        {
-            beganJumpThisFrame = true;
-            Vector2 direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
-            if (bodyStatus == PlayerBodyStatus.Crouching && energy > 0)
-            {
-                if (direction.X == 0)
-                {
-                    velocity.Y += -2100F; // * size; //1F is size
-                    AddEnergy(-200);
-                }
-                else
-                {
-                    velocity.Y += -700F; // * size; //1F is size
-                    AddEnergy(-200);
-                    bodyStatus = PlayerBodyStatus.Longjumping;
-                    longJumpDir = direction.X;
-                }
-            }
-            else
-            {
-                velocity.Y += -1500F; // * size; //1F is size
-                //velocity.Y += -1000F * size;
-            }
-        }
-    }
-
     public float GetGravityMod(Vector2 velocity)
     {
         //This code must be ran after jump velocity has been added
 
-        CheckForSlam();
         if (bodyStatus == PlayerBodyStatus.FastFalling)
         {
             return 28F;
@@ -457,7 +441,7 @@ public partial class Player : Node2D, IGameObject
         }
         else if (Input.IsActionPressed("jump") && (velocity.Y >= 0))
         {
-            if (canGlide && energy >= 2 && bodyStatus != PlayerBodyStatus.Crouching && bodyStatus != PlayerBodyStatus.CrouchingCramped && bodyStatus != PlayerBodyStatus.Longjumping)
+            if (canGlide && energy >= 0 && bodyStatus != PlayerBodyStatus.Crouching && bodyStatus != PlayerBodyStatus.CrouchingCramped && bodyStatus != PlayerBodyStatus.Longjumping)
             {
                 return 1F;
             }
@@ -472,72 +456,10 @@ public partial class Player : Node2D, IGameObject
         }
     }
 
-    public void CheckForSlam()
+    private void SetHorizontalBodyMovement(ref Vector2 velocity)
     {
-        if (Input.IsActionJustPressed("sneak") && !body.IsOnFloor() && bodyStatus != PlayerBodyStatus.CrouchingCramped && fastFallInputTimer != -1 && energy > 0)
-        {
-            AddEnergy(-200);
-            bodyStatus = PlayerBodyStatus.FastFalling;
-            fastFallInputTimer = -1;
-            return;
-        }
-        if (Input.IsActionJustPressed("sneak") && !body.IsOnFloor() && bodyStatus != PlayerBodyStatus.CrouchingCramped && fastFallInputTimer == -1)
-        {
-            fastFallInputTimer = 30;
-        }
-        if (fastFallInputTimer > -1)
-        {
-            fastFallInputTimer--;
-        }
-    }
-
-    public void MoveBodyHorizontally(ref Vector2 velocity)
-    {
-        if (Input.IsActionJustPressed("sneak"))
-        {
-            hasMoved = false;
-            ToggleCrouchMode3();
-        }
-        else if (Input.IsActionJustReleased("sneak"))
-        {
-            ToggleCrouchMode3();
-            if (hasMoved == false)
-            {
-                body.Position = new Vector2(body.Position.X, body.Position.Y + 1);
-                body.MoveAndSlide();
-                fastFallInputTimer = 30;
-                hasMoved = true;
-            }
-        }
-
-
-        if ((bodyStatus == PlayerBodyStatus.Crouching || bodyStatus == PlayerBodyStatus.CrouchingCramped) && !Input.IsActionPressed("sneak"))
-        {
-            ToggleCrouchMode3();
-        }
-
-
-        float sneakMod = 1F;
-        if (bodyStatus == PlayerBodyStatus.Crouching || bodyStatus == PlayerBodyStatus.CrouchingCramped || Input.IsActionPressed("sneak"))
-        {
-            sneakMod = 0.5F;
-        }
-
-        //move_up and move_down do not add velocity, they are there to make sure the code functions
+        float sneakMod = GetSneakMod();
         Vector2 direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
-        if (bodyStatus == PlayerBodyStatus.Longjumping)
-        {
-            sneakMod = 2.75F;
-            if (longJumpDir is not null)
-            {
-                if (longJumpDir != direction.X)
-                {
-                    longJumpDir = null;
-                    sneakMod = 1F;
-                }
-            }
-        }
-        
 
         if (direction != Vector2.Zero)
         {
@@ -549,79 +471,140 @@ public partial class Player : Node2D, IGameObject
         }
     }
 
-
-
-
-    public void ToggleCrouchMode3()
+    private float GetSneakMod()
     {
-        
+        if (bodyStatus != PlayerBodyStatus.Crouching && bodyStatus != PlayerBodyStatus.CrouchingCramped)
+        {
+            return 1F;
+        }
+        else
+        {
+            return 0.5F;
+        }
+    }
 
+
+    //public void ToggleCrouchMode3()
+    //{
+
+    //    AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
+    //    CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
+    //    Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
+
+    //    bool isCrouched = false;
+    //    bool crouchNow = Input.IsActionPressed("sneak");
+    //    if (bodyCollision.Position.Y == 0F)
+    //    {
+    //        isCrouched = true;
+    //    }
+
+    //    if (!isCrouched && crouchNow && body.IsOnFloor())
+    //    {
+    //        bodySprite.Position = new Vector2(bodySprite.Position.X, -10F);
+    //        bodyCollision.Position = new Vector2(bodySprite.Position.X, 0F);
+    //        bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 0.68F);
+    //        body.Position = new Vector2(body.Position.X, body.Position.Y + 30F);
+    //        camera.Position = new Vector2(0, -30);
+    //        isCrouched = true;
+    //    }
+    //    else if (isCrouched && !crouchNow && body.IsOnFloor() || isCrouched && !body.IsOnFloor())
+    //    {
+    //        TryToUncrouch3();
+    //    }
+    //    else if (crouchNow)
+    //    {
+    //        //tryingToUncrouch = false;
+    //    }
+    //    if (isCrouched)
+    //    {
+    //        //jank warning
+    //        bodyStatus = PlayerBodyStatus.Crouching;
+    //        SetBodySpriteImage2();
+    //    }
+        
+    //}
+
+    private void CheckDropDownPlatform()
+    {
+        if (Input.IsActionJustPressed("sneak"))
+        {
+            dropDownPlatform = true;
+        }
+        else if (Input.IsActionJustReleased("sneak"))
+        {
+            if (dropDownPlatform == true)
+            {
+                body.Position = new Vector2(body.Position.X, body.Position.Y + 1);
+                body.MoveAndSlide();
+                dropDownPlatform = false;
+            }
+        }
+    }
+
+    private void CrouchOrTryToUncrouch()
+    {
+        bool isCrouched = (bodyStatus == PlayerBodyStatus.Crouching || bodyStatus == PlayerBodyStatus.CrouchingCramped);
+        if (!isCrouched && Input.IsActionPressed("sneak") && body.IsOnFloor())
+        {
+            Crouch();
+        }
+        else if (isCrouched && !Input.IsActionPressed("sneak") && body.IsOnFloor() || isCrouched && !body.IsOnFloor())
+        {
+            TryToUncrouch3();
+        }
+    }
+
+    private void Crouch()
+    {
         AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
         CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
         Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
 
-        bool isCrouched = false;
-        bool crouchNow = Input.IsActionPressed("sneak");
-        if (bodyCollision.Position.Y == 0F)
-        {
-            isCrouched = true;
-        }
-
-        if (!isCrouched && crouchNow && body.IsOnFloor())
-        {
-            bodySprite.Position = new Vector2(bodySprite.Position.X, -10F);
-            bodyCollision.Position = new Vector2(bodySprite.Position.X, 0F);
-            bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 0.68F);
-            body.Position = new Vector2(body.Position.X, body.Position.Y + 30F);
-            camera.Position = new Vector2(0, -30);
-            isCrouched = true;
-        }
-        else if (isCrouched && !crouchNow && body.IsOnFloor() || isCrouched && !body.IsOnFloor())
-        {
-            TryToUncrouch3();
-        }
-        else if (crouchNow)
-        {
-            //tryingToUncrouch = false;
-        }
-        SetBodySpriteImage(body.Velocity, bodySprite);
+        bodySprite.Position = new Vector2(bodySprite.Position.X, -10F);
+        bodyCollision.Position = new Vector2(bodySprite.Position.X, 0F);
+        bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 0.68F);
+        body.Position = new Vector2(body.Position.X, body.Position.Y + 30F);
+        camera.Position = new Vector2(0, -30);
     }
 
     public void TryToUncrouch3()
     {
-        //if (!Input.IsActionPressed("sneak"))
-        //{
-            //Make the "check for crouch scout collision" part it's own method later
-            CharacterBody2D crouchScout = GetNode<CharacterBody2D>("PlayerBody/PlayerBodyCrouch");
-            KinematicCollision2D collision = crouchScout.MoveAndCollide(new Vector2(0, 0));
-            crouchScout.Position = new Vector2(0, -47);
+        //Make the "check for crouch scout collision" part it's own method later
+        CharacterBody2D crouchScout = GetNode<CharacterBody2D>("PlayerBody/PlayerBodyCrouch");
+        KinematicCollision2D collision = crouchScout.MoveAndCollide(new Vector2(0, 0));
+        crouchScout.Position = new Vector2(0, -47);
 
-            if (collision == null)
-            {
-                AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
-                CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
-                Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
+        if (collision == null)
+        {
+            AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
+            CollisionShape2D bodyCollision = GetNode<CollisionShape2D>("PlayerBody/PlayerBodyCollision");
+            Camera2D camera = GetNode<Camera2D>("PlayerBody/Camera");
 
-                bodySprite.Position = new Vector2(bodySprite.Position.X, 0F);
-                bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F);
-                bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F);
-                body.Position = new Vector2(body.Position.X, body.Position.Y - 30F);
-                camera.Position = new Vector2(0, 0);
-            }
-        //}
+            bodySprite.Position = new Vector2(bodySprite.Position.X, 0F);
+            bodyCollision.Position = new Vector2(bodySprite.Position.X, 15F);
+            bodyCollision.Scale = new Vector2(bodyCollision.Scale.X, 1F);
+            body.Position = new Vector2(body.Position.X, body.Position.Y - 30F);
+            camera.Position = new Vector2(0, 0);
+            GD.Print("No collision");
+        }
+        else
+        {
+            GD.Print("collision");
+            bodyStatus = PlayerBodyStatus.CrouchingCramped;
+        }
     }
 
 
     public void SetBodySprite(Vector2 velocity)
     {
         velocity += body.GlobalPosition;
-        AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
-        SetBodySpriteDirection(velocity, bodySprite);
-        SetBodySpriteImage2(bodySprite);
+        SetBodySpriteDirection(velocity);
+        SetBodySpriteImage2();
     }
 
-    public void SetBodySpriteDirection(Vector2 velocity, AnimatedSprite2D bodySprite)
+    public void SetBodySpriteDirection(Vector2 velocity)
     {
+        AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
         if (velocity.X < body.GlobalPosition.X)
         {
             bodySprite.FlipH = true;
@@ -656,8 +639,9 @@ public partial class Player : Node2D, IGameObject
         //}
     }
 
-    public void SetBodySpriteImage2(AnimatedSprite2D bodySprite)
+    public void SetBodySpriteImage2()
     {
+        AnimatedSprite2D bodySprite = GetNode<AnimatedSprite2D>("PlayerBody/PlayerBodySprite");
         if (bodyStatus == PlayerBodyStatus.Idle)
         {
             bodySprite.Animation = "Walk";
@@ -760,7 +744,6 @@ public partial class Player : Node2D, IGameObject
                 {
                     bodyStatus = PlayerBodyStatus.Jumping;
                 }
-                
             }
             else
             {
@@ -776,7 +759,7 @@ public partial class Player : Node2D, IGameObject
         }
     }
 
-    public void SetSoulPosition(double delta)
+    public void MoveSoul(double delta)
     {
         if (soulStatus != PlayerSoulStatus.Box)
         {
@@ -969,5 +952,28 @@ public partial class Player : Node2D, IGameObject
         float xDiff = pointB.X - pointA.X;
         float yDiff = pointB.Y - pointA.Y;
         return Math.Atan2(yDiff, xDiff) * 180.0 / Math.PI;
+    }
+
+    private CursorDirection GetSoulDirection()
+    {
+        double degrees = GetDegreesBetweenPoints(body.Position, soul.Position);
+
+        if (degrees <= -45 && degrees >= -135)
+        {
+            return CursorDirection.Up;
+        }
+        else if ((degrees >= 135 && degrees <= 180) || (degrees <= -135 && degrees >= -180))
+        {
+            return CursorDirection.Left;
+        }
+        else if ((degrees >= 0 && degrees <= 45) || (degrees <= -0 && degrees >= -45))
+        {
+            return CursorDirection.Right;
+        }
+        else
+        {
+            return CursorDirection.Down;
+        }
+
     }
 }

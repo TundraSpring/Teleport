@@ -93,6 +93,10 @@ scale = Vector2(2, 1)
 position = Vector2(-3941, -851)
 scale = Vector2(2, 1)
 
+[node name="Platform26" parent="." instance=ExtResource("2_hvdsf")]
+position = Vector2(-4613, -538)
+scale = Vector2(2, 1)
+
 [node name="Platform8" parent="." instance=ExtResource("2_hvdsf")]
 position = Vector2(-1628, -234)
 scale = Vector2(1.5, 1)

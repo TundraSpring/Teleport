@@ -7,6 +7,18 @@
       "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:gameobjects\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\outdatedfiles\\player2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:outdatedfiles\\player2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\gameobjects\\environment\\platform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:gameobjects\\environment\\platform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\gameobjects\\object enums\\playersoulstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:gameobjects\\object enums\\playersoulstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\gameinfrastructure\\room.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:gameinfrastructure\\room.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -15,16 +27,12 @@
       "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:gameobjects\\rooms\\start.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\gameobjects\\environment\\platform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:gameobjects\\environment\\platform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\gameinfrastructure\\camerainstructions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:gameinfrastructure\\camerainstructions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\gameobjects\\npcs\\pilgrim.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:gameobjects\\npcs\\pilgrim.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\outdatedfiles\\player2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|solutionrelative:outdatedfiles\\player2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EFA11E78-4662-4B3C-B872-CCE6BCE13E4D}|Teleport.csproj|c:\\users\\josef\\documents\\visual studio 2022\\teleport\\gameobjects\\action objects\\projectile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -82,7 +90,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Bookmark",
@@ -90,19 +98,44 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
+              "Title": "PlayerSoulStatus.cs",
+              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\Object Enums\\PlayerSoulStatus.cs",
+              "RelativeDocumentMoniker": "GameObjects\\Object Enums\\PlayerSoulStatus.cs",
+              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\Object Enums\\PlayerSoulStatus.cs",
+              "RelativeToolTip": "GameObjects\\Object Enums\\PlayerSoulStatus.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-27T20:31:41.477Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CameraInstructions.cs",
+              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameInfrastructure\\CameraInstructions.cs",
+              "RelativeDocumentMoniker": "GameInfrastructure\\CameraInstructions.cs",
+              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameInfrastructure\\CameraInstructions.cs",
+              "RelativeToolTip": "GameInfrastructure\\CameraInstructions.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAArAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-27T12:00:19.887Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "player2.cs",
               "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\OutdatedFiles\\player2.cs",
               "RelativeDocumentMoniker": "OutdatedFiles\\player2.cs",
               "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\OutdatedFiles\\player2.cs",
               "RelativeToolTip": "OutdatedFiles\\player2.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAlAAAA",
+              "ViewState": "AQIAAP0EAAAAAAAAAAAuwDYFAAALAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-14T22:15:38.796Z"
+              "WhenOpened": "2024-10-14T22:15:38.796Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "RbLibrary.cs",
               "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\OutdatedFiles\\RbLibrary.cs",
               "RelativeDocumentMoniker": "OutdatedFiles\\RbLibrary.cs",
@@ -114,19 +147,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "Platform.cs",
               "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\Environment\\Platform.cs",
               "RelativeDocumentMoniker": "GameObjects\\Environment\\Platform.cs",
               "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\Environment\\Platform.cs",
               "RelativeToolTip": "GameObjects\\Environment\\Platform.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAAPAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAxwAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-14T21:54:03.434Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
               "Title": "Pilgrim.cs",
               "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\NPCs\\Pilgrim.cs",
               "RelativeDocumentMoniker": "GameObjects\\NPCs\\Pilgrim.cs",
@@ -138,7 +171,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "AreaSave.cs",
               "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\AreaSave.cs",
               "RelativeDocumentMoniker": "AreaSave.cs",
@@ -150,7 +183,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "PlayerBodyStatus.cs",
               "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\Object Enums\\PlayerBodyStatus.cs",
               "RelativeDocumentMoniker": "GameObjects\\Object Enums\\PlayerBodyStatus.cs",
@@ -162,7 +195,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "Dygnflower.cs",
               "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\Other Objects\\Dygnflower.cs",
               "RelativeDocumentMoniker": "GameObjects\\Other Objects\\Dygnflower.cs",
@@ -174,7 +207,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "Projectile.cs",
               "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\Action objects\\Projectile.cs",
               "RelativeDocumentMoniker": "GameObjects\\Action objects\\Projectile.cs",
@@ -192,27 +225,38 @@
               "RelativeDocumentMoniker": "GameObjects\\Player.cs",
               "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\Player.cs",
               "RelativeToolTip": "GameObjects\\Player.cs",
-              "ViewState": "AQIAAF0BAAAAAAAAAADwv3IBAAAfAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAEgDAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-30T11:41:45.426Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "Room.cs",
               "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameInfrastructure\\Room.cs",
               "RelativeDocumentMoniker": "GameInfrastructure\\Room.cs",
               "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameInfrastructure\\Room.cs",
               "RelativeToolTip": "GameInfrastructure\\Room.cs",
-              "ViewState": "AQIAAB8AAAAAAAAAAAAgwBMAAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAEIAAAAOAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-29T09:39:06.05Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-29T09:39:06.05Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 5,
+              "Title": "start.cs",
+              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\Rooms\\start.cs",
+              "RelativeDocumentMoniker": "GameObjects\\Rooms\\start.cs",
+              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\Rooms\\start.cs",
+              "RelativeToolTip": "GameObjects\\Rooms\\start.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-29T10:11:38.554Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "RoomBridge.cs",
               "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\Other Objects\\RoomBridge.cs",
               "RelativeDocumentMoniker": "GameObjects\\Other Objects\\RoomBridge.cs",
@@ -224,19 +268,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "start.cs",
-              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\Rooms\\start.cs",
-              "RelativeDocumentMoniker": "GameObjects\\Rooms\\start.cs",
-              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\Rooms\\start.cs",
-              "RelativeToolTip": "GameObjects\\Rooms\\start.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAeAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-29T10:11:38.554Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 17,
               "Title": "ObjectEvent.cs",
               "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\Object Enums\\ObjectEvent.cs",
               "RelativeDocumentMoniker": "GameObjects\\Object Enums\\ObjectEvent.cs",
@@ -248,7 +280,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "Global.cs",
               "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameInfrastructure\\Global.cs",
               "RelativeDocumentMoniker": "GameInfrastructure\\Global.cs",
@@ -260,7 +292,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "RoomPacket.cs",
               "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameInfrastructure\\RoomPacket.cs",
               "RelativeDocumentMoniker": "GameInfrastructure\\RoomPacket.cs",
@@ -272,11 +304,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "Teleport.csproj",
-              "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Teleport.csproj",
+              "DocumentMoniker": "C:\\USERS\\JOSEF\\DOCUMENTS\\VISUAL STUDIO 2022\\TELEPORT\\Teleport.csproj",
               "RelativeDocumentMoniker": "Teleport.csproj",
-              "ToolTip": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\Teleport.csproj",
+              "ToolTip": "C:\\USERS\\JOSEF\\DOCUMENTS\\VISUAL STUDIO 2022\\TELEPORT\\Teleport.csproj",
               "RelativeToolTip": "Teleport.csproj",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
@@ -284,7 +316,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 18,
               "Title": "AttackType.cs",
               "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\Object Enums\\AttackType.cs",
               "RelativeDocumentMoniker": "GameObjects\\Object Enums\\AttackType.cs",
@@ -296,7 +328,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 19,
               "Title": "DygnflowerType.cs",
               "DocumentMoniker": "C:\\Users\\josef\\Documents\\Visual Studio 2022\\Teleport\\GameObjects\\Object Enums\\DygnflowerType.cs",
               "RelativeDocumentMoniker": "GameObjects\\Object Enums\\DygnflowerType.cs",

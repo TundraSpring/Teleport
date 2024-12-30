@@ -1257,19 +1257,82 @@ public partial class player2 : Area2D
         //}
 
 
-    //        public override void _Process(double delta)
-    //{
+        //        public override void _Process(double delta)
+        //{
 
-    //}
+        //}
 
 
+        //public void CheckForSlam()
+        //{
+        //    if (Input.IsActionJustPressed("sneak") && !body.IsOnFloor() && bodyStatus != PlayerBodyStatus.CrouchingCramped && fastFallInputTimer != -1 && energy > 0)
+        //    {
+        //        AddEnergy(-200);
+        //        bodyStatus = PlayerBodyStatus.FastFalling;
+        //        fastFallInputTimer = -1;
+        //        return;
+        //    }
+        //    if (Input.IsActionJustPressed("sneak") && !body.IsOnFloor() && bodyStatus != PlayerBodyStatus.CrouchingCramped && fastFallInputTimer == -1)
+        //    {
+        //        fastFallInputTimer = 30;
+        //    }
+        //    if (fastFallInputTimer > -1)
+        //    {
+        //        fastFallInputTimer--;
+        //    }
+        //}
 
 
+        //if (bodyStatus == PlayerBodyStatus.Longjumping)
+        //{
+        //    sneakMod = 2.75F;
+        //    if (longJumpDir is not null)
+        //    {
+        //        if (longJumpDir != direction.X)
+        //        {
+        //            longJumpDir = null;
+        //            sneakMod = 1F;
+        //        }
+        //    }
+        //}
 
+        //if (Input.IsActionPressed("teleport"))
+        //{
+        //    teleportInputTimer++;
 
+        //    if (energy >= 0 && teleportInputTimer >= 20)
+        //    {
+        //        AddEnergy(-1);
+        //    }
 
 
+        //    if (teleportInputTimer >= 20 && energy >= 50 && soulStatus != PlayerSoulStatus.Box)
+        //    {
+        //        SetSoulStatus(PlayerSoulStatus.Box);
+        //    }
+        //    if (soulStatus == PlayerSoulStatus.Box)
+        //    {
 
+        //        if (energy <= 0)
+        //        {
+        //            SetSoulStatus(PlayerSoulStatus.Default);
+        //        }
+        //    }
+        //}
+        //if (Input.IsActionJustReleased("teleport"))
+        //{
+        //    if (teleportInputTimer < 10 && energy >= 1)
+        //    {
+        //        Teleport(soul.Position);
+        //        AddEnergy(-200);
+        //        AddHealth(-5);
+        //    }
+        //    else if (soulStatus == PlayerSoulStatus.Box)
+        //    {
+        //        SetSoulStatus(PlayerSoulStatus.Default);
+        //    }
+        //    teleportInputTimer = 0;
+        //}
 
 
 
@@ -1330,5 +1393,9 @@ public partial class player2 : Area2D
 
 
 
-}
+
+
+
+
+    }
 }
